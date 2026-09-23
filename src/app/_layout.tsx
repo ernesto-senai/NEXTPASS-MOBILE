@@ -1,4 +1,6 @@
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { QueryClientProvider } from "@tanstack/react-query";
+import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
@@ -15,12 +17,22 @@ export default function RootLayout() {
   const sessao = useSessao((s) => s.sessao);
   const carregada = useSessao((s) => s.carregada);
   const carregar = useSessao((s) => s.carregar);
+  // Fontes dos ícones antes da primeira tela, para não aparecerem vazios.
+  const [fontesProntas, erroFontes] = useFonts({
+    ...Ionicons.font,
+    ...MaterialCommunityIcons.font,
+  });
+  const pronto = carregada && (fontesProntas || !!erroFontes);
 
   useEffect(() => {
-    carregar().finally(() => SplashScreen.hideAsync());
+    carregar();
   }, [carregar]);
 
-  if (!carregada) return null;
+  useEffect(() => {
+    if (pronto) SplashScreen.hideAsync();
+  }, [pronto]);
+
+  if (!pronto) return null;
 
   const tipo = sessao?.usuario.tipo;
 

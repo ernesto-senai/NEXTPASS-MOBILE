@@ -54,6 +54,18 @@ src/
 
 **Deep links:** o scheme `nextpass://` abre `redefinir-senha` e `confirmar-vinculo` a partir dos e-mails (RF-05, RF-48).
 
+### Responsividade e toque (mobile-first)
+
+As regras ficam em `src/theme` e `src/hooks/use-layout-responsivo.ts`, e os componentes de `src/components/ui` já as seguem:
+
+- **Uma coluna por padrão.** Nada tem largura fixa, e o layout funciona a partir de 320px sem rolagem horizontal.
+- **Telas compactas (< 360px):** margens de 16px, espaços menores, marca reduzida, ícones decorativos ocultos e opções empilhadas.
+- **Telas largas (≥ 600px, tablet e navegador):** o formulário vira um cartão centralizado de até 440px, e os feeds ficam numa coluna centralizada de até 640px.
+- **Feeds:** o card da peneira empilha as vagas e o botão em telas compactas. As abas usam rótulos curtos no celular ("Abertas"). Cada lance do olheiro ocupa a tela, toca sem som e liga o som ao tocar nele.
+- **Toque:** botões, links, caixas de seleção e o botão de mostrar senha têm pelo menos 44px de altura (RNF-14); campos têm 48px.
+- **Fontes:** inputs e placeholders usam 16px, o que evita o zoom automático do Safari no iOS (versão web).
+- **Formulários:** usam `react-hook-form` + `zod`, com todos os erros mostrados de uma vez no envio (RNF-15). Os erros da API, como e-mail já cadastrado, aparecem no próprio campo.
+
 ### Próximas dependências (entram com cada feature)
 
-`react-hook-form` + `zod` (formulários e validação na hora, RNF-15), `expo-image-picker` e `expo-video` (lances), `expo-notifications` (push, RF-53) e `expo-auth-session` (login com Google, RF-04). A compressão de vídeo no aparelho (RNF-04) pode exigir um development build em vez do Expo Go, então vale decidir isso cedo.
+`expo-image-picker` (envio de lances), `expo-notifications` (push, RF-53) e `expo-auth-session` (login com Google, RF-04). A compressão de vídeo no aparelho (RNF-04) pode exigir um development build em vez do Expo Go, então vale decidir isso cedo.

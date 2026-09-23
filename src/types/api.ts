@@ -41,5 +41,5 @@ export interface Pagina<T> {
 }
 
 export interface ErroApi {
-  erro: { codigo: string; mensagem: string };
+  erro: { codigo: string; mensagem: string; campos?: Record<string, string[] | undefined> };
 }
