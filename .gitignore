@@ -1,0 +1,23 @@
+# Dependências
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Código nativo gerado (prebuild)
+/ios
+/android
+
+# Variáveis de ambiente
+.env
+.env.*
+!.env.example
+
+# Metro / diversos
+.metro-health-check*
+*.log
+.DS_Store
+*.tsbuildinfo
