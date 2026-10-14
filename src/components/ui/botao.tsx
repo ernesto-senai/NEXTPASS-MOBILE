@@ -57,7 +57,8 @@ export function Botao({
       disabled={inativo}
       accessibilityRole="button"
       accessibilityLabel={titulo}
-      accessibilityState={{ disabled: inativo, busy: carregando }}
+      aria-disabled={inativo}
+      aria-busy={carregando}
       style={({ pressed }) => [
         styles.base,
         pressed && styles.pressionado,

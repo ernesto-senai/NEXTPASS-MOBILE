@@ -49,7 +49,7 @@ export function SeletorSegmentado<T extends string>({
               key={opcao.valor}
               onPress={() => onAlterar(opcao.valor)}
               accessibilityRole="radio"
-              accessibilityState={{ checked: ativa }}
+              aria-checked={ativa}
               accessibilityLabel={opcao.rotulo}
               style={[styles.opcao, !ativa && styles.opcaoInativa, !!erro && styles.opcaoComErro]}
             >

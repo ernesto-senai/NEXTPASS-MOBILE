@@ -31,7 +31,7 @@ export function Abas<T extends string>({ abas, ativa, onAlterar }: AbasProps<T>)
             key={aba.chave}
             onPress={() => onAlterar(aba.chave)}
             accessibilityRole="tab"
-            accessibilityState={{ selected: selecionada }}
+            aria-selected={selecionada}
             accessibilityLabel={aba.contador ? `${aba.rotulo}, ${aba.contador}` : aba.rotulo}
             style={[styles.aba, selecionada && styles.abaSelecionada]}
           >

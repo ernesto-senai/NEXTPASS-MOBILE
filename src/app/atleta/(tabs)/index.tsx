@@ -1,17 +1,17 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Abas } from "@/components/ui/abas";
 import { Avatar } from "@/components/ui/avatar";
 import { ListaPaginada } from "@/components/ui/lista-paginada";
+import { TelaLista } from "@/components/ui/tela-lista";
 import type { SituacaoInscricao } from "@/features/avaliacoes/api";
 import { CardAvaliacao } from "@/features/avaliacoes/components/card-avaliacao";
-import { useAvaliacoesAbertas, useMinhasInscricoes } from "@/features/avaliacoes/hooks";
+import { useAvaliacoes, useMinhasInscricoes } from "@/features/avaliacoes/hooks";
 import { useLayoutResponsivo } from "@/hooks/use-layout-responsivo";
 import { primeiroNome } from "@/lib/formatadores";
 import { useSessao } from "@/store/sessao";
-import { areaToqueMinima, cores, espacamento, fonte, larguraMaximaConteudo } from "@/theme";
+import { areaToqueMinima, cores, espacamento, fonte } from "@/theme";
 
 type Aba = "abertas" | SituacaoInscricao;
 
@@ -28,61 +28,59 @@ export default function FeedAtleta() {
   const { compacto, margemLateral } = useLayoutResponsivo();
   const [aba, setAba] = useState<Aba>("abertas");
   // Carrega sempre, para o contador da aba Peneiras Abertas.
-  const abertas = useAvaliacoesAbertas();
+  const abertas = useAvaliacoes();
 
   const abrirAvaliacao = (id: string) =>
     router.push({ pathname: "/avaliacoes/[id]", params: { id } });
 
   return (
-    <SafeAreaView style={styles.tela} edges={["top", "left", "right"]}>
-      <View style={styles.coluna}>
-        <View style={[styles.cabecalho, { paddingHorizontal: margemLateral }]}>
-          <View style={styles.saudacao}>
-            <Text
-              style={[styles.titulo, { fontSize: compacto ? fonte.tituloCompacto : fonte.titulo }]}
-              accessibilityRole="header"
-              numberOfLines={1}
-            >
-              Bem-vindo, {primeiroNome(nome)} 👋
-            </Text>
-            <Text style={styles.subtitulo}>Confira as próximas peneiras públicas</Text>
-          </View>
-          <Pressable
-            onPress={() => router.push("/atleta/perfil")}
-            accessibilityRole="button"
-            accessibilityLabel="Abrir meu perfil"
-            style={styles.botaoPerfil}
+    <TelaLista>
+      <View style={[styles.cabecalho, { paddingHorizontal: margemLateral }]}>
+        <View style={styles.saudacao}>
+          <Text
+            style={[styles.titulo, { fontSize: compacto ? fonte.tituloCompacto : fonte.titulo }]}
+            accessibilityRole="header"
+            numberOfLines={1}
           >
-            <Avatar nome={nome} tamanho={compacto ? 44 : 52} />
-          </Pressable>
+            Bem-vindo, {primeiroNome(nome)} 👋
+          </Text>
+          <Text style={styles.subtitulo}>Confira as próximas peneiras públicas</Text>
         </View>
-
-        <Abas
-          abas={ABAS.map((a) =>
-            a.chave === "abertas" ? { ...a, contador: abertas.data?.pages[0]?.total } : a,
-          )}
-          ativa={aba}
-          onAlterar={setAba}
-        />
-
-        {aba === "abertas" ? (
-          <ListaPaginada
-            consulta={abertas}
-            chave={(avaliacao) => avaliacao.id}
-            renderItem={(avaliacao) => (
-              <CardAvaliacao avaliacao={avaliacao} onAbrir={() => abrirAvaliacao(avaliacao.id)} />
-            )}
-            vazio={{
-              icone: "football-outline",
-              titulo: "Nenhuma peneira aberta por enquanto",
-              descricao: "Quando olheiros publicarem novas avaliações, elas aparecem aqui.",
-            }}
-          />
-        ) : (
-          <ListaInscricoes key={aba} situacao={aba} onAbrir={abrirAvaliacao} />
-        )}
+        <Pressable
+          onPress={() => router.push("/atleta/perfil")}
+          accessibilityRole="button"
+          accessibilityLabel="Abrir meu perfil"
+          style={styles.botaoPerfil}
+        >
+          <Avatar nome={nome} tamanho={compacto ? 44 : 52} />
+        </Pressable>
       </View>
-    </SafeAreaView>
+
+      <Abas
+        abas={ABAS.map((a) =>
+          a.chave === "abertas" ? { ...a, contador: abertas.data?.pages[0]?.total } : a,
+        )}
+        ativa={aba}
+        onAlterar={setAba}
+      />
+
+      {aba === "abertas" ? (
+        <ListaPaginada
+          consulta={abertas}
+          chave={(avaliacao) => avaliacao.id}
+          renderItem={(avaliacao) => (
+            <CardAvaliacao avaliacao={avaliacao} onAbrir={() => abrirAvaliacao(avaliacao.id)} />
+          )}
+          vazio={{
+            icone: "football-outline",
+            titulo: "Nenhuma peneira aberta por enquanto",
+            descricao: "Quando olheiros publicarem novas avaliações, elas aparecem aqui.",
+          }}
+        />
+      ) : (
+        <ListaInscricoes key={aba} situacao={aba} onAbrir={abrirAvaliacao} />
+      )}
+    </TelaLista>
   );
 }
 
@@ -124,16 +122,6 @@ function ListaInscricoes({
 }
 
 const styles = StyleSheet.create({
-  tela: {
-    flex: 1,
-    backgroundColor: cores.fundo,
-  },
-  coluna: {
-    flex: 1,
-    width: "100%",
-    maxWidth: larguraMaximaConteudo,
-    alignSelf: "center",
-  },
   cabecalho: {
     flexDirection: "row",
     alignItems: "center",

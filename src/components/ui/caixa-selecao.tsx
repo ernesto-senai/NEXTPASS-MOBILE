@@ -16,7 +16,7 @@ export function CaixaSelecao({ rotulo, marcada, onAlternar, erro }: CaixaSelecao
       <Pressable
         onPress={onAlternar}
         accessibilityRole="checkbox"
-        accessibilityState={{ checked: marcada }}
+        aria-checked={marcada}
         accessibilityLabel={rotulo}
         style={styles.linha}
       >

@@ -11,6 +11,8 @@ interface CampoTextoProps extends Omit<TextInputProps, "style"> {
   prefixo?: string;
   // Campo de senha com o botão de mostrar/ocultar (RF-02).
   senha?: boolean;
+  // Esconde o rótulo na tela (ex.: campo de busca); o leitor de tela ainda o lê.
+  semRotulo?: boolean;
   ref?: Ref<TextInput>;
 }
 
@@ -20,6 +22,7 @@ export function CampoTexto({
   erro,
   prefixo,
   senha = false,
+  semRotulo = false,
   ref,
   onFocus,
   onBlur,
@@ -30,7 +33,7 @@ export function CampoTexto({
 
   return (
     <View>
-      <Text style={styles.rotulo}>{rotulo}</Text>
+      {semRotulo ? null : <Text style={styles.rotulo}>{rotulo}</Text>}
       <View style={[styles.caixa, focado && styles.caixaFocada, !!erro && styles.caixaComErro]}>
         <Ionicons name={icone} size={20} color={cores.textoSecundario} />
         {prefixo ? <Text style={styles.prefixo}>{prefixo}</Text> : null}

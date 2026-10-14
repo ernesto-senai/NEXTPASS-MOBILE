@@ -1,14 +1,16 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
 import { proximaPagina } from "@/lib/paginacao";
-import { avaliacoesApi, type SituacaoInscricao } from "./api";
+import { avaliacoesApi, type FiltrosAvaliacao, type SituacaoInscricao } from "./api";
 
-// Aba "Peneiras Abertas" do feed do atleta (RF-18).
-export function useAvaliacoesAbertas() {
+// Aba "Peneiras Abertas" do feed (RF-18) e tela de Pesquisa (RF-23, RF-24).
+// Ao mudar a busca, a lista anterior fica na tela até o novo resultado chegar.
+export function useAvaliacoes(filtros: FiltrosAvaliacao = {}) {
   return useInfiniteQuery({
-    queryKey: ["avaliacoes", "abertas"],
-    queryFn: ({ pageParam }) => avaliacoesApi.listarAbertas(pageParam),
+    queryKey: ["avaliacoes", filtros],
+    queryFn: ({ pageParam }) => avaliacoesApi.listar(pageParam, filtros),
     initialPageParam: 1,
     getNextPageParam: proximaPagina,
+    placeholderData: keepPreviousData,
   });
 }
 
