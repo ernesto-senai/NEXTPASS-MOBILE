@@ -5,7 +5,7 @@ import { alturaCampo, areaToqueMinima, cores, espacamento, fonte, raio } from "@
 
 interface CampoTextoProps extends Omit<TextInputProps, "style"> {
   rotulo: string;
-  icone: ComponentProps<typeof Ionicons>["name"];
+  icone?: ComponentProps<typeof Ionicons>["name"];
   erro?: string | undefined;
   // Texto fixo antes do valor, como o "+55" do telefone.
   prefixo?: string;
@@ -34,12 +34,19 @@ export function CampoTexto({
   return (
     <View>
       {semRotulo ? null : <Text style={styles.rotulo}>{rotulo}</Text>}
-      <View style={[styles.caixa, focado && styles.caixaFocada, !!erro && styles.caixaComErro]}>
-        <Ionicons name={icone} size={20} color={cores.textoSecundario} />
+      <View
+        style={[
+          styles.caixa,
+          props.multiline && styles.caixaMultilinha,
+          focado && styles.caixaFocada,
+          !!erro && styles.caixaComErro,
+        ]}
+      >
+        {icone ? <Ionicons name={icone} size={20} color={cores.textoSecundario} /> : null}
         {prefixo ? <Text style={styles.prefixo}>{prefixo}</Text> : null}
         <TextInput
           ref={ref}
-          style={styles.input}
+          style={[styles.input, props.multiline && styles.inputMultilinha]}
           placeholderTextColor={cores.placeholder}
           secureTextEntry={oculto}
           accessibilityLabel={rotulo}
@@ -98,6 +105,10 @@ const styles = StyleSheet.create({
     borderRadius: raio.md,
     backgroundColor: cores.fundoCampo,
   },
+  // Textos longos (ex.: legenda do lance): caixa mais alta, texto a partir do topo.
+  caixaMultilinha: {
+    alignItems: "flex-start",
+  },
   caixaFocada: {
     borderColor: cores.primaria,
   },
@@ -116,6 +127,10 @@ const styles = StyleSheet.create({
     paddingRight: espacamento.md,
     color: cores.texto,
     fontSize: fonte.input,
+  },
+  inputMultilinha: {
+    minHeight: 96,
+    textAlignVertical: "top",
   },
   botaoOlho: {
     width: areaToqueMinima,

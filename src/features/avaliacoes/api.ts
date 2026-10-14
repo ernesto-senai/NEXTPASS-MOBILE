@@ -1,3 +1,4 @@
+import { montarQuery } from "@/lib/filtros";
 import { TAMANHO_PAGINA } from "@/lib/paginacao";
 import { api } from "@/services/api/client";
 import type {
@@ -29,6 +30,22 @@ export interface AvaliacaoResumo {
   olheiro: { id: string; nome: string };
 }
 
+// RF-41: dados de "Criar avaliação", com o endereço completo.
+export interface NovaAvaliacao {
+  nome: string;
+  tipo: TipoAvaliacao;
+  categoria: Categoria;
+  posicoes: Posicao[];
+  requisitos: string;
+  taxaCentavos: number;
+  vagas: number;
+  dataHora: string;
+  local: string;
+  endereco: string;
+  cidade: string;
+  uf: string;
+}
+
 export interface InscricaoDoAtleta {
   id: string;
   status: StatusInscricao;
@@ -36,6 +53,9 @@ export interface InscricaoDoAtleta {
 }
 
 export type SituacaoInscricao = "ativas" | "participadas";
+
+// RF-42: abas "Próximas" e "Anteriores" das avaliações do olheiro.
+export type SituacaoAvaliacao = "proximas" | "anteriores";
 
 // RF-23 e RF-24: busca e filtros da tela de Pesquisa. Campo vazio não filtra.
 export interface FiltrosAvaliacao {
@@ -50,29 +70,17 @@ export interface FiltrosAvaliacao {
   ordenar?: "proximas" | "recentes" | "menorPreco";
 }
 
-// Valor do filtro como texto da URL; vazio quando o filtro não está em uso.
-const paraTexto = (valor: FiltrosAvaliacao[keyof FiltrosAvaliacao]) =>
-  Array.isArray(valor) ? valor.join(",") : valor === false ? "" : String(valor ?? "");
-
-// Quantos filtros estão ativos, para o botão "Filtrar (2)". Busca e ordem não contam.
-export function contarFiltros(filtros: FiltrosAvaliacao): number {
-  return Object.entries(filtros).filter(
-    ([chave, valor]) => chave !== "busca" && chave !== "ordenar" && paraTexto(valor) !== "",
-  ).length;
-}
-
-function paraQuery(filtros: FiltrosAvaliacao, pagina: number): string {
-  const query = new URLSearchParams({ pagina: String(pagina), limite: String(TAMANHO_PAGINA) });
-  for (const [chave, valor] of Object.entries(filtros)) {
-    if (paraTexto(valor)) query.set(chave, paraTexto(valor));
-  }
-  return query.toString();
-}
-
 // Rotas de avaliações e inscrições (Endpoints v2.0, seções 5.6 e 5.7).
 export const avaliacoesApi = {
   listar: (pagina: number, filtros: FiltrosAvaliacao = {}) =>
-    api<Pagina<AvaliacaoResumo>>(`/avaliacoes?${paraQuery(filtros, pagina)}`),
+    api<Pagina<AvaliacaoResumo>>(`/avaliacoes?${montarQuery(filtros, pagina)}`),
+  minhas: (situacao: SituacaoAvaliacao, pagina: number) =>
+    api<Pagina<AvaliacaoResumo>>(
+      `/perfil/avaliacoes?situacao=${situacao}&pagina=${pagina}&limite=${TAMANHO_PAGINA}`,
+    ),
+  cancelar: (id: string) => api<void>(`/avaliacoes/${id}`, { method: "DELETE" }),
+  criar: (dados: NovaAvaliacao) =>
+    api<AvaliacaoResumo>("/avaliacoes", { method: "POST", body: JSON.stringify(dados) }),
   minhasInscricoes: (situacao: SituacaoInscricao, pagina: number) =>
     api<Pagina<InscricaoDoAtleta>>(
       `/perfil/inscricoes?situacao=${situacao}&pagina=${pagina}&limite=${TAMANHO_PAGINA}`,

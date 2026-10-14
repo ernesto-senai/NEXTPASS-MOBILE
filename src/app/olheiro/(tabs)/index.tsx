@@ -1,4 +1,3 @@
-import { useRouter } from "expo-router";
 import { useBottomTabBarHeight } from "expo-router/tabs";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -14,12 +13,12 @@ import { EstadoVazio } from "@/components/ui/estado-vazio";
 import type { LanceDoFeed } from "@/features/lances/api";
 import { LanceTelaCheia } from "@/features/lances/components/lance-tela-cheia";
 import { useFeedDeLances, useRegistrarVisualizacao } from "@/features/lances/hooks";
-import { ApiError, mensagemDeErro } from "@/services/api/client";
+import { VerificacaoPendente } from "@/features/verificacao/components/verificacao-pendente";
+import { ehOlheiroNaoVerificado, mensagemDeErro } from "@/services/api/client";
 import { cores, larguraMaximaConteudo } from "@/theme";
 
 // Feed de lances com visualizações e "Chamar para Avaliação" (RF-32 a RF-34)
 export default function FeedLances() {
-  const router = useRouter();
   const feed = useFeedDeLances();
   const registrar = useRegistrarVisualizacao();
   // Cada lance ocupa a área acima do menu inferior. A conta sai da altura da
@@ -60,30 +59,17 @@ export default function FeedLances() {
     );
   }
 
+  if (ehOlheiroNaoVerificado(feed.error)) return <VerificacaoPendente />;
+
   if (feed.isError) {
-    // RN-04: olheiro novo vê o que falta em vez de um erro.
-    const naoVerificado =
-      feed.error instanceof ApiError && feed.error.codigo === "OLHEIRO_NAO_VERIFICADO";
     return (
       <SafeAreaView style={styles.centro}>
-        {naoVerificado ? (
-          <EstadoVazio
-            icone="shield-checkmark-outline"
-            titulo="Sua conta está em verificação"
-            descricao="Para proteger os atletas, o feed de lances é liberado depois que a equipe do NextPass aprova seus documentos."
-            acao={{
-              titulo: "Enviar documentos",
-              onPress: () => router.push("/olheiro/verificacao"),
-            }}
-          />
-        ) : (
-          <EstadoVazio
-            icone="cloud-offline-outline"
-            titulo="Não foi possível carregar"
-            descricao={mensagemDeErro(feed.error)}
-            acao={{ titulo: "Tentar de novo", onPress: () => feed.refetch() }}
-          />
-        )}
+        <EstadoVazio
+          icone="cloud-offline-outline"
+          titulo="Não foi possível carregar"
+          descricao={mensagemDeErro(feed.error)}
+          acao={{ titulo: "Tentar de novo", onPress: () => feed.refetch() }}
+        />
       </SafeAreaView>
     );
   }

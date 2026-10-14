@@ -12,10 +12,11 @@ import { LinkTexto } from "@/components/ui/link-texto";
 import { MensagemErro } from "@/components/ui/mensagem-erro";
 import { SeletorSegmentado } from "@/components/ui/seletor-segmentado";
 import { TelaFormulario } from "@/components/ui/tela-formulario";
-import { TituloFormulario } from "@/features/auth/components/titulo-formulario";
-import { aplicarErrosDaApi, useCadastrar } from "@/features/auth/hooks";
+import { TituloFormulario } from "@/components/ui/titulo-formulario";
+import { useCadastrar } from "@/features/auth/hooks";
 import { cadastroSchema, type DadosCadastro } from "@/features/auth/schemas";
 import { useLayoutResponsivo } from "@/hooks/use-layout-responsivo";
+import { aplicarErrosDaApi } from "@/lib/formulario";
 import { formatarTelefone } from "@/lib/formatadores";
 import { cores, espacamento, fonte } from "@/theme";
 

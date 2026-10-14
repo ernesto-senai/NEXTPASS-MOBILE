@@ -11,6 +11,7 @@ import { Botao } from "@/components/ui/botao";
 import { Etiqueta } from "@/components/ui/etiqueta";
 import { useLayoutResponsivo } from "@/hooks/use-layout-responsivo";
 import { formatarVisualizacoes } from "@/lib/formatadores";
+import { urlDoArquivo } from "@/services/api/client";
 import { cores, espacamento, fonte } from "@/theme";
 import type { LanceDoFeed } from "../api";
 
@@ -29,7 +30,7 @@ export function LanceTelaCheia({ lance, altura, ativo }: LanceTelaCheiaProps) {
   const { compacto, margemLateral } = useLayoutResponsivo();
   const [mudo, setMudo] = useState(true);
 
-  const player = useVideoPlayer(lance.url, (p) => {
+  const player = useVideoPlayer(urlDoArquivo(lance.url), (p) => {
     p.loop = true;
     p.muted = true;
   });

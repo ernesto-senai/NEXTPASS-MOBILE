@@ -1,4 +1,4 @@
-import type { Categoria, Posicao, TipoAvaliacao } from "@/types/api";
+import type { Categoria, PePreferencial, Posicao, TipoAvaliacao } from "@/types/api";
 import { formatarCategoria } from "./formatadores";
 
 // Opções exibidas em filtros e formulários, com os termos do glossário.
@@ -26,3 +26,15 @@ export const POSICOES = [
   { valor: "PE", rotulo: "Ponta esquerda" },
   { valor: "ATA", rotulo: "Atacante" },
 ] as const satisfies readonly { valor: Posicao; rotulo: string }[];
+
+export const PES_PREFERENCIAIS = [
+  { valor: "DESTRO", rotulo: "Destro" },
+  { valor: "CANHOTO", rotulo: "Canhoto" },
+  { valor: "AMBIDESTRO", rotulo: "Ambidestro" },
+] as const satisfies readonly { valor: PePreferencial; rotulo: string }[];
+
+// Rótulo de uma opção pelo valor (ex.: "MEI" → "Meia").
+export const rotuloDe = <T extends string>(
+  opcoes: readonly { valor: T; rotulo: string }[],
+  valor: T,
+) => opcoes.find((opcao) => opcao.valor === valor)?.rotulo ?? valor;

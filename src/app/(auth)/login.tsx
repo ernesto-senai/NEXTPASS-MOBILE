@@ -10,10 +10,11 @@ import { LinkTexto } from "@/components/ui/link-texto";
 import { MensagemErro } from "@/components/ui/mensagem-erro";
 import { TelaFormulario } from "@/components/ui/tela-formulario";
 import { MarcaNextPass } from "@/features/auth/components/marca-nextpass";
-import { TituloFormulario } from "@/features/auth/components/titulo-formulario";
-import { aplicarErrosDaApi, useEntrar } from "@/features/auth/hooks";
+import { TituloFormulario } from "@/components/ui/titulo-formulario";
+import { useEntrar } from "@/features/auth/hooks";
 import { type DadosLogin, loginSchema } from "@/features/auth/schemas";
 import { useLayoutResponsivo } from "@/hooks/use-layout-responsivo";
+import { aplicarErrosDaApi } from "@/lib/formulario";
 import { cores, espacamento, fonte } from "@/theme";
 
 // Login com e-mail/senha ou Google, lembrar de mim e links de cadastro (RF-01 a RF-06)

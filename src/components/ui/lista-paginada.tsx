@@ -12,29 +12,37 @@ interface ListaPaginadaProps<T> {
   chave: (item: T) => string;
   renderItem: (item: T) => ReactElement;
   vazio: ComponentProps<typeof EstadoVazio>;
+  // Conteúdo que rola junto com a lista, antes e depois dos itens (ex.: o
+  // cartão do perfil e o botão de sair).
+  cabecalho?: ReactElement;
+  rodape?: ReactElement;
 }
 
 // Lista de uma rota paginada (RNF-02): carrega mais ao chegar no fim, atualiza
 // ao puxar para baixo e mostra os estados de carregando, erro e vazio.
-export function ListaPaginada<T>({ consulta, chave, renderItem, vazio }: ListaPaginadaProps<T>) {
+export function ListaPaginada<T>({
+  consulta,
+  chave,
+  renderItem,
+  vazio,
+  cabecalho,
+  rodape,
+}: ListaPaginadaProps<T>) {
   const { margemLateral, espacoEntreCampos } = useLayoutResponsivo();
+  const itens = consulta.data?.pages.flatMap((pagina) => pagina.dados) ?? [];
 
-  if (consulta.isPending) {
-    return <ActivityIndicator style={styles.carregando} color={cores.primaria} size="large" />;
-  }
-
-  if (consulta.isError) {
-    return (
-      <EstadoVazio
-        icone="cloud-offline-outline"
-        titulo="Não foi possível carregar"
-        descricao={mensagemDeErro(consulta.error)}
-        acao={{ titulo: "Tentar de novo", onPress: () => consulta.refetch() }}
-      />
-    );
-  }
-
-  const itens = consulta.data.pages.flatMap((pagina) => pagina.dados);
+  const semItens = consulta.isPending ? (
+    <ActivityIndicator style={styles.carregando} color={cores.primaria} size="large" />
+  ) : consulta.isError ? (
+    <EstadoVazio
+      icone="cloud-offline-outline"
+      titulo="Não foi possível carregar"
+      descricao={mensagemDeErro(consulta.error)}
+      acao={{ titulo: "Tentar de novo", onPress: () => consulta.refetch() }}
+    />
+  ) : (
+    <EstadoVazio {...vazio} />
+  );
 
   return (
     <FlatList
@@ -46,9 +54,13 @@ export function ListaPaginada<T>({ consulta, chave, renderItem, vazio }: ListaPa
         { paddingHorizontal: margemLateral, paddingVertical: espacoEntreCampos },
       ]}
       ItemSeparatorComponent={() => <View style={{ height: espacoEntreCampos }} />}
-      ListEmptyComponent={<EstadoVazio {...vazio} />}
+      ListHeaderComponent={cabecalho}
+      ListEmptyComponent={semItens}
       ListFooterComponent={
-        consulta.isFetchingNextPage ? <ActivityIndicator color={cores.primaria} /> : null
+        <>
+          {consulta.isFetchingNextPage ? <ActivityIndicator color={cores.primaria} /> : null}
+          {rodape}
+        </>
       }
       onEndReached={() => {
         if (consulta.hasNextPage && !consulta.isFetchingNextPage) consulta.fetchNextPage();

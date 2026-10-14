@@ -14,6 +14,18 @@ const formatoHora = new Intl.DateTimeFormat("pt-BR", { hour: "2-digit", minute: 
 export const formatarData = (iso: string) => formatoData.format(new Date(iso));
 export const formatarHora = (iso: string) => formatoHora.format(new Date(iso));
 
+// Avisos recentes: "agora", "há 5 min", "há 3 h", "há 2 dias"; depois de uma
+// semana, a data.
+export function formatarTempoRelativo(iso: string, agora = Date.now()): string {
+  const minutos = Math.floor((agora - new Date(iso).getTime()) / 60_000);
+  if (minutos < 1) return "agora";
+  if (minutos < 60) return `há ${minutos} min`;
+  const horas = Math.floor(minutos / 60);
+  if (horas < 24) return `há ${horas} h`;
+  const dias = Math.floor(horas / 24);
+  return dias < 7 ? `há ${dias} ${dias === 1 ? "dia" : "dias"}` : formatarData(iso);
+}
+
 // SUB_17 → "Sub-17" (glossário da Documentação do Projeto).
 export const formatarCategoria = (categoria: Categoria) =>
   categoria === "PROFISSIONAL" ? "Profissional" : categoria.replace("SUB_", "Sub-");
@@ -29,12 +41,43 @@ export function formatarVisualizacoes(total: number): string {
 
 export const primeiroNome = (nome: string) => nome.trim().split(/\s+/)[0] ?? nome;
 
+// Altura no padrão do glossário: 176 → "1,76 m".
+export const formatarAltura = (centimetros: number) =>
+  `${(centimetros / 100).toFixed(2).replace(".", ",")} m`;
+
+// Duração do lance: 45 → "0:45".
+export const formatarDuracao = (segundos: number) =>
+  `${Math.floor(segundos / 60)}:${String(Math.round(segundos) % 60).padStart(2, "0")}`;
+
+// Tamanho de arquivo: 12_900_000 bytes → "12,3 MB".
+export const formatarMegabytes = (bytes: number) =>
+  `${(bytes / 1024 / 1024).toFixed(1).replace(".", ",")} MB`;
+
 // "Silas Rodrigues" → "SR"; "Palmeiras" → "PA".
 export function iniciais(nome: string): string {
   const partes = nome.trim().split(/\s+/);
   const texto =
     partes.length > 1 ? `${partes[0]![0]}${partes[partes.length - 1]![0]}` : nome.slice(0, 2);
   return texto.toUpperCase();
+}
+
+// Máscaras de data e horário enquanto o usuário digita: 29112026 → "29/11/2026"
+// e 1500 → "15:00". Funcionam igual no celular e na web, sem seletor nativo.
+export function formatarDataDigitada(valor: string): string {
+  const digitos = somenteDigitos(valor).slice(0, 8);
+  return [digitos.slice(0, 2), digitos.slice(2, 4), digitos.slice(4)].filter(Boolean).join("/");
+}
+
+export function formatarHoraDigitada(valor: string): string {
+  const digitos = somenteDigitos(valor).slice(0, 4);
+  return digitos.length > 2 ? `${digitos.slice(0, 2)}:${digitos.slice(2)}` : digitos;
+}
+
+// Valor em reais enquanto o usuário digita, da direita para a esquerda como
+// nos apps de banco: 2500 → "25,00". Vazio continua vazio (avaliação gratuita).
+export function formatarReaisDigitados(valor: string): string {
+  const centavos = Number(somenteDigitos(valor).slice(0, 7));
+  return centavos ? (centavos / 100).toFixed(2).replace(".", ",") : "";
 }
 
 // RNF-15: máscara do telefone enquanto o usuário digita. O "+55" fica fixo
