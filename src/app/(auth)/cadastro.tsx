@@ -7,14 +7,16 @@ import { StyleSheet, Text, View } from "react-native";
 import { Botao } from "@/components/ui/botao";
 import { CaixaSelecao } from "@/components/ui/caixa-selecao";
 import { CampoTexto } from "@/components/ui/campo-texto";
+import { GrupoCampo } from "@/components/ui/grupo-campo";
 import { LinkTexto } from "@/components/ui/link-texto";
 import { MensagemErro } from "@/components/ui/mensagem-erro";
 import { SeletorSegmentado } from "@/components/ui/seletor-segmentado";
 import { TelaFormulario } from "@/components/ui/tela-formulario";
-import { TituloFormulario } from "@/features/auth/components/titulo-formulario";
-import { aplicarErrosDaApi, useCadastrar } from "@/features/auth/hooks";
+import { TituloFormulario } from "@/components/ui/titulo-formulario";
+import { useCadastrar } from "@/features/auth/hooks";
 import { cadastroSchema, type DadosCadastro } from "@/features/auth/schemas";
 import { useLayoutResponsivo } from "@/hooks/use-layout-responsivo";
+import { aplicarErrosDaApi } from "@/lib/formulario";
 import { formatarTelefone } from "@/lib/formatadores";
 import { cores, espacamento, fonte } from "@/theme";
 
@@ -36,7 +38,15 @@ const ATUACOES = [
   { valor: "INDEPENDENTE", rotulo: "Independente" },
 ] as const;
 
-const CAMPOS_API = ["nome", "email", "telefone", "atuacao", "clube", "senha", "aceiteTermos"] as const;
+const CAMPOS_API = [
+  "nome",
+  "email",
+  "telefone",
+  "atuacao",
+  "clube",
+  "senha",
+  "aceiteTermos",
+] as const;
 
 // Criar conta com abas Jogador e Olheiro e aceite dos termos (RF-07 a RF-11)
 export default function Cadastro() {
@@ -176,8 +186,7 @@ export default function Cadastro() {
 
         {ehOlheiro ? (
           <View style={{ gap: espacoEntreCampos }}>
-            <View>
-              <Text style={styles.rotulo}>Atuação</Text>
+            <GrupoCampo rotulo="Atuação">
               <Controller
                 control={control}
                 name="atuacao"
@@ -191,7 +200,7 @@ export default function Cadastro() {
                   />
                 )}
               />
-            </View>
+            </GrupoCampo>
             {atuacao === "CLUBE" ? (
               <Controller
                 control={control}
@@ -301,14 +310,6 @@ const styles = StyleSheet.create({
     borderRadius: 32,
     borderWidth: 1,
     borderColor: cores.borda,
-  },
-  rotulo: {
-    color: cores.primaria,
-    fontSize: fonte.rotulo,
-    fontWeight: "700",
-    letterSpacing: 0.5,
-    textTransform: "uppercase",
-    marginBottom: 6,
   },
   rodape: {
     flexDirection: "row",
