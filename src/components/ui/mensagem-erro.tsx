@@ -12,6 +12,16 @@ export function MensagemErro({ mensagem }: { mensagem: string }) {
   );
 }
 
+// Confirmação de uma ação concluída (ex.: lance publicado, RNF-05).
+export function MensagemSucesso({ mensagem }: { mensagem: string }) {
+  return (
+    <View style={[styles.caixa, styles.sucesso]} accessibilityLiveRegion="polite">
+      <Ionicons name="checkmark-circle" size={20} color={cores.primaria} />
+      <Text style={styles.texto}>{mensagem}</Text>
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   caixa: {
     flexDirection: "row",
@@ -22,6 +32,10 @@ const styles = StyleSheet.create({
     borderColor: cores.erro,
     borderRadius: raio.md,
     backgroundColor: "rgba(229, 72, 77, 0.12)",
+  },
+  sucesso: {
+    borderColor: cores.primaria,
+    backgroundColor: "rgba(80, 160, 65, 0.12)",
   },
   texto: {
     flexShrink: 1,
