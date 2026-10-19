@@ -33,6 +33,16 @@ export type StatusConvite = "PENDENTE" | "ACEITO" | "RECUSADO" | "EXPIRADO";
 
 export type AlvoDenuncia = "PERFIL" | "VIDEO" | "CONVITE" | "AVALIACAO";
 
+export type TipoNotificacao =
+  | "NOVO_CONVITE"
+  | "COPIA_CONVITE"
+  | "CONVITE_RESPONDIDO"
+  | "APROVAR_INSCRICAO"
+  | "NOVA_INSCRICAO"
+  | "INSCRICAO_ATUALIZADA"
+  | "AVALIACAO_ALTERADA"
+  | "VERIFICACAO_ANALISADA";
+
 // Listas paginadas: ?pagina=1&limite=20 (RNF-02).
 export interface Pagina<T> {
   dados: T[];
