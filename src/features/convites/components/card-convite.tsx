@@ -1,7 +1,9 @@
+import { useRouter } from "expo-router";
 import type { ComponentProps } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Botao } from "@/components/ui/botao";
 import type { Etiqueta } from "@/components/ui/etiqueta";
+import { LinkTexto } from "@/components/ui/link-texto";
 import { MensagemErro } from "@/components/ui/mensagem-erro";
 import { ResumoAvaliacao } from "@/features/avaliacoes/components/resumo-avaliacao";
 import { useLayoutResponsivo } from "@/hooks/use-layout-responsivo";
@@ -25,9 +27,16 @@ function situacaoDoConvite({ status, inscricao }: ConviteRecebido): Situacao | u
   return undefined;
 }
 
+interface CardConviteProps {
+  convite: ConviteRecebido;
+  // RF-49: o responsável acompanha o convite, mas quem responde é o atleta.
+  paraResponsavel?: boolean;
+}
+
 // Convite na caixa do atleta (RF-26, RF-27): avaliação, olheiro, mensagem
 // (até 300 caracteres, RN-10) e os botões Aceitar e Recusar.
-export function CardConvite({ convite }: { convite: ConviteRecebido }) {
+export function CardConvite({ convite, paraResponsavel = false }: CardConviteProps) {
+  const router = useRouter();
   const { compacto } = useLayoutResponsivo();
   const responder = useResponderConvite();
   const pendente = convite.status === "PENDENTE";
@@ -43,11 +52,12 @@ export function CardConvite({ convite }: { convite: ConviteRecebido }) {
         mostrarOlheiro
       />
 
+      {paraResponsavel ? <Text style={styles.para}>Para {convite.atleta.nome}</Text> : null}
       <Text style={styles.mensagem}>“{convite.mensagem}”</Text>
 
       {responder.isError ? <MensagemErro mensagem={mensagemDeErro(responder.error)} /> : null}
 
-      {pendente ? (
+      {pendente && !paraResponsavel ? (
         <View style={styles.botoes}>
           <View style={styles.botao}>
             <Botao
@@ -70,6 +80,20 @@ export function CardConvite({ convite }: { convite: ConviteRecebido }) {
           </View>
         </View>
       ) : null}
+
+      {/* RF-54: convite abusivo ou suspeito vai para a moderação. */}
+      <View style={styles.denunciar}>
+        <LinkTexto
+          onPress={() =>
+            router.push({
+              pathname: "/denunciar",
+              params: { alvoTipo: "CONVITE", alvoId: convite.id, nome: convite.avaliacao.nome },
+            })
+          }
+        >
+          Denunciar convite
+        </LinkTexto>
+      </View>
     </View>
   );
 }
@@ -93,9 +117,18 @@ const styles = StyleSheet.create({
     fontSize: fonte.apoio + 1,
     lineHeight: 21,
   },
+  para: {
+    color: cores.primaria,
+    fontSize: fonte.apoio,
+    fontWeight: "700",
+  },
   botoes: {
     flexDirection: "row",
     gap: espacamento.sm,
+  },
+  denunciar: {
+    alignItems: "flex-end",
+    marginVertical: -espacamento.sm,
   },
   botao: {
     flex: 1,
