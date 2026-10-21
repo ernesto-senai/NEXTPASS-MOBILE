@@ -1,4 +1,5 @@
-import { api } from "@/services/api/client";
+import { type ArquivoEscolhido, arquivoParaEnvio } from "@/lib/arquivos";
+import { api, enviarArquivo } from "@/services/api/client";
 import type { Categoria, PePreferencial, Posicao, TipoUsuario } from "@/types/api";
 
 // Parte do atleta no perfil. Os dados técnicos ficam vazios até ele completar
@@ -52,4 +53,10 @@ export const perfilApi = {
   buscar: () => api<Perfil>("/perfil"),
   atualizarAtleta: (dados: DadosDoAtleta) =>
     api<Perfil>("/perfil", { method: "PATCH", body: JSON.stringify(dados) }),
+  // RF-14: JPG, PNG ou WebP de até 5 MB; a foto nova substitui a anterior.
+  trocarFoto: (foto: ArquivoEscolhido) => {
+    const dados = new FormData();
+    dados.append("foto", arquivoParaEnvio(foto));
+    return enviarArquivo<{ fotoUrl: string }>("/perfil/foto", dados, () => undefined);
+  },
 };
