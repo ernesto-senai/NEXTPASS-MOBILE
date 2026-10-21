@@ -11,7 +11,8 @@ import { VagasPreenchidas } from "./vagas-preenchidas";
 interface CardMinhaAvaliacaoProps {
   avaliacao: AvaliacaoResumo;
   onVerParticipantes: () => void;
-  // Sem onCancelar (ex.: avaliações anteriores), o botão não aparece.
+  // Sem onEditar e onCancelar (ex.: avaliações anteriores), os botões não aparecem.
+  onEditar?: (() => void) | undefined;
   onCancelar?: (() => void) | undefined;
   cancelando?: boolean;
 }
@@ -29,10 +30,11 @@ function situacao({
 }
 
 // Avaliação em "Minhas avaliações" (RF-42) e no destaque das Notificações:
-// participantes, "Ver participantes" (RF-44) e "Cancelar" (RF-43).
+// participantes, "Ver participantes" (RF-44), "Editar" e "Cancelar" (RF-43).
 export function CardMinhaAvaliacao({
   avaliacao,
   onVerParticipantes,
+  onEditar,
   onCancelar,
   cancelando = false,
 }: CardMinhaAvaliacaoProps) {
@@ -46,22 +48,33 @@ export function CardMinhaAvaliacao({
         total={avaliacao.vagas}
         unidade="participantes"
       />
-      <View style={styles.botoes}>
-        <View style={styles.botao}>
-          <Botao titulo="Ver participantes" tamanho="compacto" onPress={onVerParticipantes} />
+      <Botao titulo="Ver participantes" tamanho="compacto" onPress={onVerParticipantes} />
+      {onEditar || onCancelar ? (
+        <View style={styles.botoes}>
+          {onEditar ? (
+            <View style={styles.botao}>
+              <Botao
+                titulo="Editar"
+                tamanho="compacto"
+                variante="contorno"
+                iconeInicio="create-outline"
+                onPress={onEditar}
+              />
+            </View>
+          ) : null}
+          {onCancelar ? (
+            <View style={styles.botao}>
+              <Botao
+                titulo="Cancelar"
+                tamanho="compacto"
+                variante="contorno"
+                carregando={cancelando}
+                onPress={onCancelar}
+              />
+            </View>
+          ) : null}
         </View>
-        {onCancelar ? (
-          <View style={styles.botao}>
-            <Botao
-              titulo="Cancelar"
-              tamanho="compacto"
-              variante="contorno"
-              carregando={cancelando}
-              onPress={onCancelar}
-            />
-          </View>
-        ) : null}
-      </View>
+      ) : null}
     </View>
   );
 }

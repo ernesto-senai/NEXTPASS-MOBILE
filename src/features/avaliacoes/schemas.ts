@@ -1,9 +1,14 @@
 import { z } from "zod";
 import { lerData, lerHora } from "@/lib/datas";
-import { somenteDigitos } from "@/lib/formatadores";
+import {
+  formatarData,
+  formatarHora,
+  formatarReaisDigitados,
+  somenteDigitos,
+} from "@/lib/formatadores";
 import { ehUf } from "@/lib/uf";
 import type { Categoria, Posicao, TipoAvaliacao } from "@/types/api";
-import type { NovaAvaliacao } from "./api";
+import type { AvaliacaoDetalhe, NovaAvaliacao } from "./api";
 
 function lerDataHora(data: string, hora: string) {
   const dia = lerData(data);
@@ -57,5 +62,24 @@ export function paraNovaAvaliacao({
     uf: uf.toUpperCase(),
     taxaCentavos: Number(somenteDigitos(taxa)),
     dataHora: lerDataHora(data, hora)!.toISOString(),
+  };
+}
+
+// RF-43: avaliação salva → valores do formulário de edição.
+export function paraDadosAvaliacao(avaliacao: AvaliacaoDetalhe): DadosAvaliacao {
+  return {
+    tipo: avaliacao.tipo,
+    nome: avaliacao.nome,
+    categoria: avaliacao.categoria,
+    posicoes: avaliacao.posicoes,
+    requisitos: avaliacao.requisitos,
+    taxa: formatarReaisDigitados(String(avaliacao.taxaCentavos)),
+    vagas: avaliacao.vagas,
+    data: formatarData(avaliacao.dataHora),
+    hora: formatarHora(avaliacao.dataHora),
+    local: avaliacao.local,
+    endereco: avaliacao.endereco ?? "",
+    cidade: avaliacao.cidade,
+    uf: avaliacao.uf,
   };
 }
