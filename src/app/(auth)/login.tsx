@@ -17,7 +17,7 @@ import { useLayoutResponsivo } from "@/hooks/use-layout-responsivo";
 import { aplicarErrosDaApi } from "@/lib/formulario";
 import { cores, espacamento, fonte } from "@/theme";
 
-// Login com e-mail/senha ou Google, lembrar de mim e links de cadastro (RF-01 a RF-06)
+// Login com e-mail e senha, lembrar de mim e links de cadastro (RF-01 a RF-06)
 export default function Login() {
   const router = useRouter();
   const { compacto, espacoEntreCampos } = useLayoutResponsivo();
@@ -114,21 +114,11 @@ export default function Login() {
 
         {erroGeral ? <MensagemErro mensagem={erroGeral} /> : null}
 
-        <Botao titulo="Entrar" iconeFim="arrow-forward" onPress={enviar} carregando={entrar.isPending} />
-
-        <View style={styles.divisor}>
-          <View style={styles.linhaDivisor} />
-          <Text style={styles.textoDivisor}>ou</Text>
-          <View style={styles.linhaDivisor} />
-        </View>
-
-        {/* RF-04: aguarda as credenciais do Google Cloud. */}
         <Botao
-          variante="contorno"
-          titulo="Entrar com Google (em breve)"
-          iconeInicio="logo-google"
-          desativado
-          onPress={() => {}}
+          titulo="Entrar"
+          iconeFim="arrow-forward"
+          onPress={enviar}
+          carregando={entrar.isPending}
         />
 
         <View style={styles.rodape}>
@@ -169,20 +159,6 @@ const styles = StyleSheet.create({
   opcoesEmpilhadas: {
     alignItems: "flex-start",
     marginTop: -espacamento.sm,
-  },
-  divisor: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: espacamento.sm,
-  },
-  linhaDivisor: {
-    flex: 1,
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: cores.textoSecundario,
-  },
-  textoDivisor: {
-    color: cores.textoSecundario,
-    fontSize: fonte.apoio,
   },
   rodape: {
     alignItems: "center",
