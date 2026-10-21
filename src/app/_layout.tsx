@@ -59,6 +59,7 @@ export default function RootLayout() {
         <Stack.Protected guard={!!sessao}>
           <Stack.Screen name="avaliacoes/[id]" options={{ headerShown: true }} />
           <Stack.Screen name="denunciar" options={{ headerShown: true, presentation: "modal" }} />
+          <Stack.Screen name="excluir-conta" options={{ headerShown: true }} />
         </Stack.Protected>
       </Stack>
     </QueryClientProvider>

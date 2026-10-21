@@ -148,6 +148,9 @@ export default function PerfilAtleta() {
 
         <View style={styles.sair}>
           <BotaoSair />
+          <View style={styles.excluir}>
+            <LinkTexto onPress={() => router.push("/excluir-conta")}>Excluir conta</LinkTexto>
+          </View>
         </View>
       </ScrollView>
     </TelaLista>
@@ -175,6 +178,10 @@ const styles = StyleSheet.create({
     gap: espacamento.sm,
   },
   sair: {
+    gap: espacamento.sm,
     marginTop: espacamento.md,
+  },
+  excluir: {
+    alignItems: "center",
   },
 });

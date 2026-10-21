@@ -30,6 +30,33 @@ export function formatarTempoRelativo(iso: string, agora = Date.now()): string {
 export const formatarCategoria = (categoria: Categoria) =>
   categoria === "PROFISSIONAL" ? "Profissional" : categoria.replace("SUB_", "Sub-");
 
+// RN-01: idade que o atleta completa no ano, por categoria (mesma tabela da API).
+const IDADES_NO_ANO: Record<Categoria, readonly [number, number]> = {
+  SUB_9: [0, 9],
+  SUB_11: [10, 11],
+  SUB_13: [12, 13],
+  SUB_15: [14, 15],
+  SUB_17: [16, 17],
+  SUB_20: [18, 20],
+  PROFISSIONAL: [21, 150],
+};
+
+// "Sub-17 (2009/2010)": a categoria com os anos de nascimento que ela reúne.
+export function formatarCategoriaComAnos(categoria: Categoria, ano = new Date().getFullYear()) {
+  const [minima, maxima] = IDADES_NO_ANO[categoria];
+  const nome = formatarCategoria(categoria);
+  if (categoria === "PROFISSIONAL") return `${nome} (${minima} anos ou mais)`;
+  if (categoria === "SUB_9") return `${nome} (nascidos a partir de ${ano - maxima})`;
+  const [de, ate] = [ano - maxima, ano - minima];
+  return `${nome} (${ate - de === 1 ? `${de}/${ate}` : `${de} a ${ate}`})`;
+}
+
+const formatoReais = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+
+// RN-13: taxa informativa da avaliação: 3000 → "R$ 30,00"; 0 → "Gratuita".
+export const formatarTaxa = (centavos: number) =>
+  centavos === 0 ? "Gratuita" : formatoReais.format(centavos / 100);
+
 // RF-32: 3 → "3 visualizações"; 1234 → "1,2 mil visualizações".
 export function formatarVisualizacoes(total: number): string {
   const numero =
