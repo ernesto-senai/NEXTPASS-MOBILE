@@ -56,7 +56,7 @@ export function LanceTelaCheia({ lance, altura, ativo }: LanceTelaCheiaProps) {
     <View style={[styles.lance, { height: altura }]}>
       <VideoView
         player={player}
-        style={StyleSheet.absoluteFill}
+        style={styles.video}
         contentFit="cover"
         nativeControls={false}
       />
@@ -143,6 +143,15 @@ const styles = StyleSheet.create({
     width: "100%",
     overflow: "hidden",
     backgroundColor: cores.fundo,
+  },
+  // Formato de reels: o vídeo cobre a tela inteira, cortando as bordas. Na web
+  // o <video> só estica com largura e altura explícitas.
+  video: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
   },
   // Camadas sobre o vídeo deixam o toque passar para o botão de som, exceto
   // no atleta, na denúncia e no botão "Chamar para Avaliação".
