@@ -624,3 +624,7 @@
 {"_e":"metro:bundling:done","_t":1792602145278,"id":"2t","total":1,"ms":53.5118}
 {"_e":"metro:client_log","_t":1792602145609,"level":"info","data":["%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools","font-weight:bold"]}
 {"_e":"metro:client_log","_t":1792602145609,"level":"log","data":["Running application \"main\" with appParams:\n","{\"hydrate\": undefined, \"rootTag\": \"#root\"}","\nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."]}
+{"_e":"metro:bundling:started","_t":1792603893789,"id":"33","platform":"web","environment":null,"entry":"src\\app\\(auth)\\login.tsx"}
+{"_e":"metro:client_log","_t":1792603895259,"level":"error","data":["[AbortError: The play() request was interrupted because video-only background media was paused to save power. https://goo.gl/LdLk22]"]}
+{"_e":"metro:client_log","_t":1792603895259,"level":"error","data":["[AbortError: The play() request was interrupted because video-only background media was paused to save power. https://goo.gl/LdLk22]"]}
+{"_e":"metro:bundling:started","_t":1792603939120,"id":"37","platform":"web","environment":null,"entry":"src\\app\\(auth)\\login.tsx"}
