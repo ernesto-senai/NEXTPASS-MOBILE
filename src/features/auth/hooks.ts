@@ -72,16 +72,6 @@ async function limparSessao() {
   queryClient.clear();
 }
 
-// RF-05: pede o link de nova senha por e-mail.
-export function usePedirNovaSenha() {
-  return useMutation({ mutationFn: authApi.esqueciSenha });
-}
-
-// RF-05: troca a senha pelo link do e-mail.
-export function useRedefinirSenha() {
-  return useMutation({ mutationFn: authApi.redefinirSenha });
-}
-
 // RF-56: exclui a conta e volta para o login.
 export function useExcluirConta() {
   return useMutation({

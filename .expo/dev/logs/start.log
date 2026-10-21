@@ -628,3 +628,12 @@
 {"_e":"metro:client_log","_t":1792603895259,"level":"error","data":["[AbortError: The play() request was interrupted because video-only background media was paused to save power. https://goo.gl/LdLk22]"]}
 {"_e":"metro:client_log","_t":1792603895259,"level":"error","data":["[AbortError: The play() request was interrupted because video-only background media was paused to save power. https://goo.gl/LdLk22]"]}
 {"_e":"metro:bundling:started","_t":1792603939120,"id":"37","platform":"web","environment":null,"entry":"src\\app\\(auth)\\login.tsx"}
+{"_e":"metro:bundling:started","_t":1792609694110,"id":"4r","platform":"web","environment":null,"entry":"src\\app\\(auth)\\esqueci-senha.tsx"}
+{"_e":"metro:bundling:started","_t":1792609703907,"id":"4s","platform":"web","environment":null,"entry":"src\\app\\(auth)\\esqueci-senha.tsx"}
+{"_e":"metro:bundling:started","_t":1792609703909,"id":"4t","platform":"web","environment":null,"entry":"src\\features\\auth\\api.ts"}
+{"_e":"metro:bundling:started","_t":1792609703910,"id":"4u","platform":"web","environment":null,"entry":"src\\features\\auth\\hooks.ts"}
+{"_e":"metro:bundling:started","_t":1792609753759,"id":"4y","platform":"web","environment":null,"entry":"node_modules\\expo-router\\entry.js"}
+{"_e":"metro:bundling:progress","_t":1792609753759,"id":"4y","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1792609753814,"id":"4y","total":1,"ms":54.3595}
+{"_e":"metro:client_log","_t":1792609754069,"level":"info","data":["%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools","font-weight:bold"]}
+{"_e":"metro:client_log","_t":1792609754069,"level":"log","data":["Running application \"main\" with appParams:\n","{\"hydrate\": undefined, \"rootTag\": \"#root\"}","\nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."]}
