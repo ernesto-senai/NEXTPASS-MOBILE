@@ -1,4 +1,4 @@
-import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
+import { keepPreviousData, useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { proximaPagina } from "@/lib/paginacao";
 import { atletasApi, type FiltrosAtleta } from "./api";
 
@@ -12,4 +12,9 @@ export function useAtletas(filtros: FiltrosAtleta = {}) {
     getNextPageParam: proximaPagina,
     placeholderData: keepPreviousData,
   });
+}
+
+// RF-38: perfil de um atleta, aberto pela busca, pelo feed ou pelos participantes.
+export function useAtleta(id: string) {
+  return useQuery({ queryKey: ["atletas", "detalhe", id], queryFn: () => atletasApi.detalhe(id) });
 }

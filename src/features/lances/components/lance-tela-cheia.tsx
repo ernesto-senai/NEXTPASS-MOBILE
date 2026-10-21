@@ -12,7 +12,7 @@ import { Etiqueta } from "@/components/ui/etiqueta";
 import { useLayoutResponsivo } from "@/hooks/use-layout-responsivo";
 import { formatarVisualizacoes } from "@/lib/formatadores";
 import { urlDoArquivo } from "@/services/api/client";
-import { cores, espacamento, fonte } from "@/theme";
+import { areaToqueMinima, cores, espacamento, fonte } from "@/theme";
 import type { LanceDoFeed } from "../api";
 
 interface LanceTelaCheiaProps {
@@ -83,17 +83,45 @@ export function LanceTelaCheia({ lance, altura, ativo }: LanceTelaCheiaProps) {
         style={[styles.rodape, { paddingHorizontal: margemLateral }]}
       >
         <View style={styles.autor}>
-          <Avatar nome={lance.atleta.nome} fotoUrl={lance.atleta.fotoUrl} tamanho={44} />
-          <View style={styles.textos}>
-            <Text style={styles.nome} numberOfLines={1}>
-              {lance.atleta.nome}
-            </Text>
-            {lance.legenda ? (
-              <Text style={styles.legenda} numberOfLines={compacto ? 2 : 3}>
-                {lance.legenda}
+          {/* RF-38: tocar no atleta abre o perfil com a ficha técnica. */}
+          <Pressable
+            onPress={() =>
+              router.push({ pathname: "/olheiro/atletas/[id]", params: { id: lance.atleta.id } })
+            }
+            accessibilityRole="link"
+            accessibilityLabel={`Ver perfil de ${lance.atleta.nome}`}
+            style={({ pressed }) => [styles.atleta, pressed && styles.pressionado]}
+          >
+            <Avatar nome={lance.atleta.nome} fotoUrl={lance.atleta.fotoUrl} tamanho={44} />
+            <View style={styles.textos}>
+              <Text style={styles.nome} numberOfLines={1}>
+                {lance.atleta.nome}
               </Text>
-            ) : null}
-          </View>
+              {lance.legenda ? (
+                <Text style={styles.legenda} numberOfLines={compacto ? 2 : 3}>
+                  {lance.legenda}
+                </Text>
+              ) : null}
+            </View>
+          </Pressable>
+          {/* RF-54: denúncia do lance. */}
+          <Pressable
+            onPress={() =>
+              router.push({
+                pathname: "/denunciar",
+                params: {
+                  alvoTipo: "VIDEO",
+                  alvoId: lance.id,
+                  nome: `lance de ${lance.atleta.nome}`,
+                },
+              })
+            }
+            accessibilityRole="button"
+            accessibilityLabel="Denunciar lance"
+            style={({ pressed }) => [styles.denunciar, pressed && styles.pressionado]}
+          >
+            <Ionicons name="flag-outline" size={20} color={cores.texto} />
+          </Pressable>
         </View>
         <Botao
           titulo="Chamar para Avaliação"
@@ -117,7 +145,7 @@ const styles = StyleSheet.create({
     backgroundColor: cores.fundo,
   },
   // Camadas sobre o vídeo deixam o toque passar para o botão de som, exceto
-  // no botão "Chamar para Avaliação".
+  // no atleta, na denúncia e no botão "Chamar para Avaliação".
   topo: {
     position: "absolute",
     left: 0,
@@ -146,10 +174,28 @@ const styles = StyleSheet.create({
     paddingBottom: espacamento.md,
   },
   autor: {
-    pointerEvents: "none",
+    pointerEvents: "box-none",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: espacamento.sm,
+  },
+  atleta: {
+    flex: 1,
+    minWidth: 0,
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
+  },
+  pressionado: {
+    opacity: 0.7,
+  },
+  denunciar: {
+    width: areaToqueMinima,
+    height: areaToqueMinima,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: areaToqueMinima / 2,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   textos: {
     flex: 1,
