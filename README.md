@@ -12,13 +12,15 @@ npm install
 npm start                # leia o QR code com o Expo Go (Android ou iOS)
 ```
 
-A API precisa estar rodando (veja `../NEXTPASS-BACKEND`). No celular, `localhost` é o próprio aparelho: use o IP da máquina na rede local.
+A API precisa estar rodando (veja `../NEXTPASS-BACKEND`). No celular, `localhost` é o próprio aparelho: use o IP da máquina na rede local. No navegador do computador, `npx expo start --web` abre o app em `http://localhost:8081` (aí o `.env` pode usar `http://localhost:3333`).
 
-| Script | O que faz |
-| --- | --- |
-| `start` / `android` / `ios` | Sobe o Metro (Expo Go) |
-| `typecheck` | Checa os tipos, inclusive as rotas tipadas do Expo Router |
-| `lint` | ESLint com a configuração do Expo |
+O `.env` e a pasta `.expo/` não vão para o GitHub: cada um tem o seu. Os tipos das rotas (`.expo/types`) são gerados no primeiro `npm start`.
+
+| Script                      | O que faz                                                 |
+| --------------------------- | --------------------------------------------------------- |
+| `start` / `android` / `ios` | Sobe o Metro (Expo Go)                                    |
+| `typecheck`                 | Checa os tipos, inclusive as rotas tipadas do Expo Router |
+| `lint`                      | ESLint com a configuração do Expo                         |
 
 ## Arquitetura
 
@@ -52,7 +54,7 @@ src/
 
 **Perfis:** o `Stack.Protected` do layout raiz libera a área de cada perfil (`atleta/`, `olheiro/`, `responsavel/`), e cada área tem o próprio `(tabs)`. O menu inferior é o mesmo para atleta e olheiro (Feed, Pesquisa, Publicar, Notificações, Perfil), mas cada perfil tem telas diferentes em cada aba.
 
-**Deep links:** o scheme `nextpass://` abre `redefinir-senha` e `confirmar-vinculo` a partir dos e-mails (RF-05, RF-48).
+**Deep links:** o scheme `nextpass://` abre `confirmar-vinculo`, o link enviado ao responsável (RF-48). O "Esqueceu sua senha?" é simulado: a tela confere o e-mail e mostra a confirmação do envio (RF-05).
 
 ### Responsividade e toque (mobile-first)
 
@@ -66,6 +68,7 @@ As regras ficam em `src/theme` e `src/hooks/use-layout-responsivo.ts`, e os comp
 - **Fontes:** inputs e placeholders usam 16px, o que evita o zoom automático do Safari no iOS (versão web).
 - **Formulários:** usam `react-hook-form` + `zod`, com todos os erros mostrados de uma vez no envio (RNF-15). Os erros da API, como e-mail já cadastrado, aparecem no próprio campo.
 
-### Próximas dependências (entram com cada feature)
+### Fora do escopo do TCC (trabalhos futuros)
 
-`expo-image-picker` (envio de lances), `expo-notifications` (push, RF-53) e `expo-auth-session` (login com Google, RF-04). A compressão de vídeo no aparelho (RNF-04) pode exigir um development build em vez do Expo Go, então vale decidir isso cedo.
+- **Login com Google (RF-04, RF-12)** e **notificações push (RF-53):** exigiriam `expo-auth-session`, `expo-notifications` e um development build (o Expo Go não recebe push). Os avisos ficam na aba Notificações.
+- **Compressão de vídeo no Android (RNF-04):** no iOS a galeria já entrega o vídeo em 720p; no Android o app confere o limite de 50 MB antes do envio. Comprimir exigiria uma biblioteca nativa e um development build.
