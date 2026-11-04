@@ -1,12 +1,26 @@
+import Constants from "expo-constants";
+import { Platform } from "react-native";
 import { type Sessao, useSessao } from "@/store/sessao";
 import type { ErroApi } from "@/types/api";
 
-const BASE_URL = `${process.env.EXPO_PUBLIC_API_URL}/api/v1`;
+// No celular (Expo Go), "localhost" é o próprio aparelho. Então, no Android e
+// no iOS, o app fala com a API pelo mesmo endereço e porta de onde baixou o
+// código (ex.: 192.168.137.1:8081 no hotspot do Windows): o Expo repassa
+// /api/ e /uploads/ para a API (metro.config.js), e o firewall do computador
+// só precisa liberar a porta do Expo.
+function enderecoDaApi() {
+  const url = process.env.EXPO_PUBLIC_API_URL ?? "";
+  const expo = Constants.expoConfig?.hostUri;
+  if (Platform.OS === "web" || !expo || !/\/\/(localhost|127\.0\.0\.1)\b/.test(url)) return url;
+  return `http://${expo}`;
+}
+
+const API_URL = enderecoDaApi();
+const BASE_URL = `${API_URL}/api/v1`;
 
 // Arquivos guardados pela própria API vêm com caminho relativo
 // (/uploads/videos/...); os de outros serviços já vêm com a URL completa.
-export const urlDoArquivo = (url: string) =>
-  url.startsWith("/") ? `${process.env.EXPO_PUBLIC_API_URL}${url}` : url;
+export const urlDoArquivo = (url: string) => (url.startsWith("/") ? `${API_URL}${url}` : url);
 
 // Erro da API com o código fixo que o app usa para tratar cada caso
 // (ex.: VAGAS_ESGOTADAS mostra "Vagas esgotadas" no botão). Em erros de
