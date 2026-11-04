@@ -4,7 +4,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { useVideoPlayer, VideoView } from "expo-video";
 import { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Avatar } from "@/components/ui/avatar";
 import { Botao } from "@/components/ui/botao";
@@ -54,12 +54,26 @@ export function LanceTelaCheia({ lance, altura, ativo }: LanceTelaCheiaProps) {
 
   return (
     <View style={[styles.lance, { height: altura }]}>
+      {/* No Android, o feed monta mais de um vídeo ao mesmo tempo, e o
+          SurfaceView padrão pode não desenhar a imagem: o TextureView desenha. */}
       <VideoView
         player={player}
         style={styles.video}
         contentFit="cover"
         nativeControls={false}
+        surfaceType="textureView"
       />
+      {status === "loading" ? (
+        <View style={styles.aviso}>
+          <ActivityIndicator color={cores.texto} size="large" />
+        </View>
+      ) : null}
+      {status === "error" ? (
+        <View style={styles.aviso}>
+          <Ionicons name="alert-circle-outline" size={40} color={cores.texto} />
+          <Text style={styles.textoAviso}>Não foi possível carregar este lance.</Text>
+        </View>
+      ) : null}
       <Pressable
         style={StyleSheet.absoluteFill}
         onPress={alternarSom}
@@ -152,6 +166,20 @@ const styles = StyleSheet.create({
     left: 0,
     width: "100%",
     height: "100%",
+  },
+  // Carregando ou erro no meio do vídeo, sem bloquear o toque.
+  aviso: {
+    ...StyleSheet.absoluteFill,
+    pointerEvents: "none",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: espacamento.sm,
+    paddingHorizontal: espacamento.lg,
+  },
+  textoAviso: {
+    color: cores.texto,
+    fontSize: fonte.corpo,
+    textAlign: "center",
   },
   // Camadas sobre o vídeo deixam o toque passar para o botão de som, exceto
   // no atleta, na denúncia e no botão "Chamar para Avaliação".

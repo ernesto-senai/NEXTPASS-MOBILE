@@ -47,10 +47,12 @@ function SlideLance({ lance, largura }: { lance: LanceDoAtleta; largura: number 
   return (
     <View style={[styles.slide, { width: largura }]}>
       <View>
+        {/* Vários vídeos lado a lado: no Android, o TextureView desenha todos. */}
         <VideoView
           player={player}
           nativeControls
           contentFit="cover"
+          surfaceType="textureView"
           style={styles.video}
           accessibilityLabel={lance.legenda ?? "Lance em destaque"}
         />
