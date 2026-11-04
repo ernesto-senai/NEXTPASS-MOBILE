@@ -103,7 +103,7 @@ export default function EsqueciSenha() {
           autoComplete="email"
           textContentType="emailAddress"
           returnKeyType="send"
-          onSubmitEditing={enviar}
+          onSubmitEditing={() => enviar()}
         />
 
         <Botao

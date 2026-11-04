@@ -116,7 +116,7 @@ export default function IndicarResponsavel() {
             autoCapitalize="none"
             autoComplete="email"
             returnKeyType="send"
-            onSubmitEditing={enviar}
+            onSubmitEditing={() => enviar()}
           />
           <Text style={styles.dica}>
             Ele recebe um e-mail com o link para criar a conta no NextPass e confirmar o vínculo.

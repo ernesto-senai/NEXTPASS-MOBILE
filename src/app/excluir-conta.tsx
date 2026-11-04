@@ -82,7 +82,7 @@ export default function ExcluirConta() {
         autoCapitalize="none"
         autoComplete="current-password"
         returnKeyType="go"
-        onSubmitEditing={enviar}
+        onSubmitEditing={() => enviar()}
       />
 
       {erroGeral ? <MensagemErro mensagem={erroGeral} /> : null}

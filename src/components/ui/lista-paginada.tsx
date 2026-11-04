@@ -69,7 +69,9 @@ export function ListaPaginada<T>({
       refreshControl={
         <RefreshControl
           refreshing={consulta.isRefetching && !consulta.isFetchingNextPage}
-          onRefresh={() => consulta.refetch()}
+          onRefresh={() => {
+            consulta.refetch();
+          }}
           tintColor={cores.primaria}
           colors={[cores.primaria]}
         />

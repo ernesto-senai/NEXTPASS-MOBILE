@@ -6,7 +6,7 @@ import {
   StyleSheet,
   useWindowDimensions,
   View,
-  type ViewToken,
+  type ListViewToken,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { EstadoVazio } from "@/components/ui/estado-vazio";
@@ -35,8 +35,8 @@ export default function FeedLances() {
 
   // O FlatList exige que esta função não mude entre renderizações.
   const aoMudarVisiveis = useCallback(
-    ({ viewableItems }: { viewableItems: ViewToken<LanceDoFeed>[] }) => {
-      const lance = viewableItems[0]?.item;
+    ({ viewableItems }: { viewableItems: ListViewToken[] }) => {
+      const lance = viewableItems[0]?.item as LanceDoFeed | undefined;
       if (lance) setVisivel(lance.id);
     },
     [],

@@ -1,6 +1,14 @@
 import { Ionicons } from "@expo/vector-icons";
 import { type ComponentProps, type Ref, useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, type TextInputProps, View } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  type TextInputInstance,
+  type TextInputProps,
+  View,
+} from "react-native";
 import { alturaCampo, areaToqueMinima, cores, espacamento, fonte, raio } from "@/theme";
 
 interface CampoTextoProps extends Omit<TextInputProps, "style"> {
@@ -13,7 +21,7 @@ interface CampoTextoProps extends Omit<TextInputProps, "style"> {
   senha?: boolean;
   // Esconde o rótulo na tela (ex.: campo de busca); o leitor de tela ainda o lê.
   semRotulo?: boolean;
-  ref?: Ref<TextInput>;
+  ref?: Ref<TextInputInstance>;
 }
 
 export function CampoTexto({
