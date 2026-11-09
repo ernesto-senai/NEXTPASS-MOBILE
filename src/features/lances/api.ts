@@ -10,6 +10,8 @@ export interface LanceDoFeed {
   legenda: string | null;
   localizacao: string | null;
   duracaoSeg: number;
+  // Vídeo deitado: aparece inteiro, sem cortar.
+  horizontal: boolean;
   criadoEm: string;
   visualizacoes: number;
   atleta: { id: string; nome: string; fotoUrl: string | null };

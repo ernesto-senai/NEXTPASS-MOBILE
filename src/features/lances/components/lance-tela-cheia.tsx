@@ -59,7 +59,7 @@ export function LanceTelaCheia({ lance, altura, ativo }: LanceTelaCheiaProps) {
       <VideoView
         player={player}
         style={styles.video}
-        contentFit="cover"
+        contentFit={lance.horizontal ? "contain" : "cover"}
         nativeControls={false}
         surfaceType="textureView"
       />
@@ -158,8 +158,9 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     backgroundColor: cores.fundo,
   },
-  // Formato de reels: o vídeo cobre a tela inteira, cortando as bordas. Na web
-  // o <video> só estica com largura e altura explícitas.
+  // O vídeo em pé cobre a tela inteira (formato de reels), e o deitado aparece
+  // inteiro, no meio da tela (contentFit). Na web o <video> só estica com
+  // largura e altura explícitas.
   video: {
     position: "absolute",
     top: 0,
