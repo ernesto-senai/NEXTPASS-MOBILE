@@ -36,7 +36,7 @@ export interface ConviteEnviado {
   copiaResponsavel: boolean;
 }
 
-// Rotas de convites (Endpoints v2.0, seção 5.8).
+// Rotas de convites.
 export const convitesApi = {
   recebidos: (pagina: number) =>
     api<Pagina<ConviteRecebido>>(`/convites?pagina=${pagina}&limite=${TAMANHO_PAGINA}`),

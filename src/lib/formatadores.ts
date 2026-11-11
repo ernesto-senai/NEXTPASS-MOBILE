@@ -26,7 +26,7 @@ export function formatarTempoRelativo(iso: string, agora = Date.now()): string {
   return dias < 7 ? `há ${dias} ${dias === 1 ? "dia" : "dias"}` : formatarData(iso);
 }
 
-// SUB_17 → "Sub-17" (glossário da Documentação do Projeto).
+// Ex.: SUB_17 vira "Sub-17".
 export const formatarCategoria = (categoria: Categoria) =>
   categoria === "PROFISSIONAL" ? "Profissional" : categoria.replace("SUB_", "Sub-");
 
@@ -53,11 +53,11 @@ export function formatarCategoriaComAnos(categoria: Categoria, ano = new Date().
 
 const formatoReais = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 
-// RN-13: taxa informativa da avaliação: 3000 → "R$ 30,00"; 0 → "Gratuita".
+// RN-13: taxa só informativa. Ex.: 3000 vira "R$ 30,00" e 0 vira "Gratuita".
 export const formatarTaxa = (centavos: number) =>
   centavos === 0 ? "Gratuita" : formatoReais.format(centavos / 100);
 
-// RF-32: 3 → "3 visualizações"; 1234 → "1,2 mil visualizações".
+// RF-32: ex.: 3 vira "3 visualizações" e 1234 vira "1,2 mil visualizações".
 export function formatarVisualizacoes(total: number): string {
   const numero =
     total < 1000
@@ -68,19 +68,19 @@ export function formatarVisualizacoes(total: number): string {
 
 export const primeiroNome = (nome: string) => nome.trim().split(/\s+/)[0] ?? nome;
 
-// Altura no padrão do glossário: 176 → "1,76 m".
+// Altura em metros. Ex.: 176 vira "1,76 m".
 export const formatarAltura = (centimetros: number) =>
   `${(centimetros / 100).toFixed(2).replace(".", ",")} m`;
 
-// Duração do lance: 45 → "0:45".
+// Duração do lance. Ex.: 45 vira "0:45".
 export const formatarDuracao = (segundos: number) =>
   `${Math.floor(segundos / 60)}:${String(Math.round(segundos) % 60).padStart(2, "0")}`;
 
-// Tamanho de arquivo: 12_900_000 bytes → "12,3 MB".
+// Tamanho do arquivo. Ex.: 12_900_000 bytes vira "12,3 MB".
 export const formatarMegabytes = (bytes: number) =>
   `${(bytes / 1024 / 1024).toFixed(1).replace(".", ",")} MB`;
 
-// "Silas Rodrigues" → "SR"; "Palmeiras" → "PA".
+// Iniciais. Ex.: "Silas Rodrigues" vira "SR" e "Palmeiras" vira "PA".
 export function iniciais(nome: string): string {
   const partes = nome.trim().split(/\s+/);
   const texto =
@@ -88,8 +88,8 @@ export function iniciais(nome: string): string {
   return texto.toUpperCase();
 }
 
-// Máscaras de data e horário enquanto o usuário digita: 29112026 → "29/11/2026"
-// e 1500 → "15:00". Funcionam igual no celular e na web, sem seletor nativo.
+// Máscaras de data e hora enquanto digita (29112026 vira "29/11/2026", 1500 vira "15:00").
+// Funcionam igual no celular e na web.
 export function formatarDataDigitada(valor: string): string {
   const digitos = somenteDigitos(valor).slice(0, 8);
   return [digitos.slice(0, 2), digitos.slice(2, 4), digitos.slice(4)].filter(Boolean).join("/");
@@ -100,8 +100,8 @@ export function formatarHoraDigitada(valor: string): string {
   return digitos.length > 2 ? `${digitos.slice(0, 2)}:${digitos.slice(2)}` : digitos;
 }
 
-// Valor em reais enquanto o usuário digita, da direita para a esquerda como
-// nos apps de banco: 2500 → "25,00". Vazio continua vazio (avaliação gratuita).
+// Valor em reais enquanto digita, da direita para a esquerda como nos apps de banco
+// (2500 vira "25,00"). Vazio continua vazio (avaliação gratuita).
 export function formatarReaisDigitados(valor: string): string {
   const centavos = Number(somenteDigitos(valor).slice(0, 7));
   return centavos ? (centavos / 100).toFixed(2).replace(".", ",") : "";

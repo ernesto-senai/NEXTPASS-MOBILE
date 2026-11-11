@@ -29,7 +29,7 @@ interface DadosCadastroOlheiroApi extends DadosCadastroApi {
 const post = <T>(caminho: string, corpo: unknown) =>
   api<T>(caminho, { method: "POST", body: JSON.stringify(corpo) });
 
-// Rotas de autenticação e cadastro (Endpoints v2.0, seções 5.1 e 5.2).
+// Rotas de autenticação e cadastro.
 export const authApi = {
   entrar: (dados: { email: string; senha: string; lembrar: boolean }) =>
     post<SessaoApi>("/auth/login", dados),

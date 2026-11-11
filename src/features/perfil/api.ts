@@ -48,7 +48,7 @@ export interface DadosDoAtleta {
   nacionalidade: string;
 }
 
-// Rotas do perfil (Endpoints v2.0, seção 5.2).
+// Rotas do perfil.
 export const perfilApi = {
   buscar: () => api<Perfil>("/perfil"),
   atualizarAtleta: (dados: DadosDoAtleta) =>

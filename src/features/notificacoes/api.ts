@@ -15,7 +15,7 @@ export interface Notificacao {
 // A primeira página também traz quantas ainda não foram lidas.
 export type PaginaNotificacoes = Pagina<Notificacao> & { naoLidas: number };
 
-// Rotas de notificações (Endpoints v2.0, seção 5.9).
+// Rotas de notificações.
 export const notificacoesApi = {
   listar: (pagina: number) =>
     api<PaginaNotificacoes>(`/notificacoes?pagina=${pagina}&limite=${TAMANHO_PAGINA}`),

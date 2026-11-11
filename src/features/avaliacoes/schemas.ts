@@ -49,7 +49,7 @@ export const avaliacaoSchema = z
 
 export type DadosAvaliacao = z.infer<typeof avaliacaoSchema>;
 
-// Formulário → corpo do POST /avaliacoes.
+// Converte o formulário no corpo do POST /avaliacoes.
 export function paraNovaAvaliacao({
   data,
   hora,
@@ -65,7 +65,7 @@ export function paraNovaAvaliacao({
   };
 }
 
-// RF-43: avaliação salva → valores do formulário de edição.
+// RF-43: preenche o formulário de edição com a avaliação salva.
 export function paraDadosAvaliacao(avaliacao: AvaliacaoDetalhe): DadosAvaliacao {
   return {
     tipo: avaliacao.tipo,

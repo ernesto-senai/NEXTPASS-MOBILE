@@ -4,10 +4,10 @@ import { PES_PREFERENCIAIS, POSICOES, rotuloDe } from "@/lib/rotulos";
 import type { Perfil, PerfilAtleta } from "../api";
 import { FotoPerfil } from "./foto-perfil";
 
-const SEM_DADO = "—";
+const SEM_DADO = "-";
 
 // Cartão do topo do próprio perfil (protótipo "Perfil Atleta"), com a foto que
-// o atleta pode trocar. Enquanto o perfil está incompleto, os dados aparecem com "—".
+// o atleta pode trocar. Dado que ainda falta aparece como "-".
 export function CabecalhoAtleta({ perfil, atleta }: { perfil: Perfil; atleta: PerfilAtleta }) {
   const posicoes = atleta.posicoes.map((posicao) => rotuloDe(POSICOES, posicao)).join(", ");
   const local = [atleta.cidade, atleta.uf].filter(Boolean).join(", ");

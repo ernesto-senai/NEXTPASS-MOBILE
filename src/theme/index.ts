@@ -41,7 +41,7 @@ export const larguraMaximaFormulario = 440;
 // Listas e feeds não esticam além disso em tablets e no navegador.
 export const larguraMaximaConteudo = 640;
 
-// RNF-14: área de toque mínima de 44 × 44 pt. Campos e botões usam 48 e 52.
+// RNF-14: área de toque mínima de 44x44 pt. Campos e botões usam 48 e 52.
 export const areaToqueMinima = 44;
 export const alturaCampo = 48;
 export const alturaBotao = 52;

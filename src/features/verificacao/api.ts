@@ -22,7 +22,7 @@ export interface Documentos {
   comprovante?: ArquivoEscolhido | null | undefined;
 }
 
-// Rotas de verificação (Endpoints v2.0, seção 5.3).
+// Rotas de verificação.
 export const verificacaoApi = {
   situacao: () => api<SituacaoVerificacao>("/perfil/verificacao"),
   enviar: ({ documento, comprovante }: Documentos, onProgresso: (fracao: number) => void) => {

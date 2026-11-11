@@ -6,9 +6,8 @@ import { useSessao } from "@/store/sessao";
 import { authApi, type SessaoApi } from "./api";
 import type { DadosCadastro, DadosLogin } from "./schemas";
 
-// Guarda a sessão no app. O Stack.Protected do layout raiz leva o usuário para
-// a área do perfil assim que a sessão existe. O cache é limpo para não mostrar
-// dados da conta anterior no mesmo aparelho.
+// Salva a sessão. O Stack.Protected leva para a área do perfil, e o cache é limpo
+// para não aparecer nada da conta anterior.
 export async function abrirSessao(resposta: SessaoApi, lembrar: boolean) {
   const { tipo } = resposta.usuario;
   if (tipo === "ADMIN") {
@@ -52,9 +51,7 @@ export function useCadastrar() {
   });
 }
 
-// RF-55: sai da conta. Avisa a API para invalidar o token do aparelho; se ela
-// não responder (ex.: sem internet), sai do app do mesmo jeito. Sem sessão, o
-// Stack.Protected do layout raiz leva de volta para o login.
+// RF-55: sair. Avisa a API para invalidar o token; se ela não responder, sai do mesmo jeito.
 export function useSair() {
   return useMutation({
     mutationFn: async () => {

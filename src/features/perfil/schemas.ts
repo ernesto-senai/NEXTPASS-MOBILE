@@ -35,7 +35,7 @@ export const perfilAtletaSchema = z.object({
 
 export type FormularioPerfilAtleta = z.infer<typeof perfilAtletaSchema>;
 
-// Perfil salvo → valores iniciais do formulário (campos vazios se faltar algo).
+// Valores iniciais do formulário a partir do perfil salvo (vazio se faltar algo).
 export function valoresDoPerfil({ nome, atleta }: Perfil): FormularioPerfilAtleta {
   return {
     nome,
@@ -50,7 +50,7 @@ export function valoresDoPerfil({ nome, atleta }: Perfil): FormularioPerfilAtlet
   };
 }
 
-// Formulário → corpo do PATCH /perfil.
+// Converte o formulário no corpo do PATCH /perfil.
 export function paraDadosDoAtleta({
   dataNascimento,
   alturaCm,

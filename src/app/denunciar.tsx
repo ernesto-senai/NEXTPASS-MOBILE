@@ -74,7 +74,7 @@ export default function Denunciar() {
           Denunciar
         </Text>
         <Text style={styles.dica}>
-          O que há de errado com {params.nome ? `“${params.nome}”` : alvo}? A denúncia é anônima
+          O que há de errado com {params.nome ? `"${params.nome}"` : alvo}? A denúncia é anônima
           para quem foi denunciado.
         </Text>
       </View>

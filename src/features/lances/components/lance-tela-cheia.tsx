@@ -54,8 +54,7 @@ export function LanceTelaCheia({ lance, altura, ativo }: LanceTelaCheiaProps) {
 
   return (
     <View style={[styles.lance, { height: altura }]}>
-      {/* No Android, o feed monta mais de um vídeo ao mesmo tempo, e o
-          SurfaceView padrão pode não desenhar a imagem: o TextureView desenha. */}
+      {/* textureView: no Android, o padrão pode não desenhar com vários vídeos na tela. */}
       <VideoView
         player={player}
         style={styles.video}
@@ -158,9 +157,8 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     backgroundColor: cores.fundo,
   },
-  // O vídeo em pé cobre a tela inteira (formato de reels), e o deitado aparece
-  // inteiro, no meio da tela (contentFit). Na web o <video> só estica com
-  // largura e altura explícitas.
+  // Em pé cobre a tela (reels); deitado fica inteiro no meio (contentFit).
+  // Na web o <video> precisa de largura e altura explícitas.
   video: {
     position: "absolute",
     top: 0,

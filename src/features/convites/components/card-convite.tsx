@@ -53,7 +53,7 @@ export function CardConvite({ convite, paraResponsavel = false }: CardConvitePro
       />
 
       {paraResponsavel ? <Text style={styles.para}>Para {convite.atleta.nome}</Text> : null}
-      <Text style={styles.mensagem}>“{convite.mensagem}”</Text>
+      <Text style={styles.mensagem}>{convite.mensagem}</Text>
 
       {responder.isError ? <MensagemErro mensagem={mensagemDeErro(responder.error)} /> : null}
 

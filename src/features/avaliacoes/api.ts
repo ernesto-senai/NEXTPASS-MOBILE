@@ -101,7 +101,7 @@ export interface FiltrosAvaliacao {
   ordenar?: "proximas" | "recentes" | "menorPreco";
 }
 
-// Rotas de avaliações e inscrições (Endpoints v2.0, seções 5.6 e 5.7).
+// Rotas de avaliações e inscrições.
 export const avaliacoesApi = {
   listar: (pagina: number, filtros: FiltrosAvaliacao = {}) =>
     api<Pagina<AvaliacaoResumo>>(`/avaliacoes?${montarQuery(filtros, pagina)}`),

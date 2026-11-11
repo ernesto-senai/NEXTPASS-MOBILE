@@ -123,7 +123,7 @@ function Resumo({ avaliacao }: { avaliacao: AvaliacaoDetalhe }) {
     {
       icone: "location-outline",
       titulo: "Local",
-      valor: `${avaliacao.local} – ${avaliacao.cidade}, ${avaliacao.uf}`,
+      valor: `${avaliacao.local} (${avaliacao.cidade}, ${avaliacao.uf})`,
     },
     {
       icone: "people-outline",

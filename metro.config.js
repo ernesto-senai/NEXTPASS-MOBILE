@@ -1,7 +1,5 @@
-// Configuração do Metro (o servidor do Expo). Além do padrão, ele repassa
-// para a API os pedidos que o app faz no celular a /api/ e /uploads/. Assim o
-// celular só precisa alcançar a porta do Expo, a mesma que já entrega o
-// código do app: firewalls como o da rede da escola bloqueiam a porta 3333.
+// Metro (servidor do Expo) repassando /api/ e /uploads/ para a API deste computador.
+// Assim o celular só precisa acessar a porta do Expo (o firewall da escola bloqueia a 3333).
 const http = require("node:http");
 const { getDefaultConfig } = require("expo/metro-config");
 
@@ -9,9 +7,13 @@ const config = getDefaultConfig(__dirname);
 const api = new URL(process.env.EXPO_PUBLIC_API_URL || "http://localhost:3333");
 const ROTAS_DA_API = ["/api/", "/uploads/"];
 
+// Com a API publicada na internet, o app fala direto com ela e o repasse não é usado.
+const apiLocal = ["localhost", "127.0.0.1"].includes(api.hostname);
+
 const padrao = config.server.enhanceMiddleware;
 config.server.enhanceMiddleware = (metro, servidor) => {
   const proximo = padrao ? padrao(metro, servidor) : metro;
+  if (!apiLocal) return proximo;
   return (req, res, next) => {
     if (!ROTAS_DA_API.some((rota) => req.url?.startsWith(rota))) return proximo(req, res, next);
 

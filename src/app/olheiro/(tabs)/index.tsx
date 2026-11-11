@@ -19,27 +19,29 @@ import { cores, larguraMaximaConteudo } from "@/theme";
 
 // Feed de lances com visualizações e "Chamar para Avaliação" (RF-32 a RF-34)
 export default function FeedLances() {
-  const feed = useFeedDeLances();
+  // Momento em que o feed abriu: sorteia a ordem dos lances. Puxar para baixo sorteia outra.
+  const [semente, setSemente] = useState(() => Date.now());
+  const feed = useFeedDeLances(semente);
   const registrar = useRegistrarVisualizacao();
-  // Cada lance ocupa a área acima do menu inferior. A conta sai da altura da
-  // tela e é ajustada pela medida real (onLayout) quando ela chega; assim o
-  // feed não fica em branco esperando a medição.
+  // Altura de cada lance: a tela menos o menu. Depois usa a medida real (onLayout)
+  // para o feed não ficar em branco esperando.
   const alturaEstimada = useWindowDimensions().height - useBottomTabBarHeight();
   const [alturaMedida, setAlturaMedida] = useState(0);
   const altura = alturaMedida || alturaEstimada;
   const lances = feed.data?.pages.flatMap((pagina) => pagina.dados) ?? [];
   // O primeiro lance já começa ativo; ao rolar, o lance visível assume.
-  const [visivel, setVisivel] = useState<string | null>(null);
-  const ativo = visivel ?? lances[0]?.id ?? null;
+  const [visivel, setVisivel] = useState<{ semente: number; id: string } | null>(null);
+  const ativo = (visivel?.semente === semente ? visivel.id : null) ?? lances[0]?.id ?? null;
   const vistos = useRef(new Set<string>());
 
-  // O FlatList exige que esta função não mude entre renderizações.
+  // O FlatList exige que esta função não mude enquanto ele está na tela. Ele é montado
+  // de novo a cada nova ordem (key={semente}).
   const aoMudarVisiveis = useCallback(
     ({ viewableItems }: { viewableItems: ListViewToken[] }) => {
       const lance = viewableItems[0]?.item as LanceDoFeed | undefined;
-      if (lance) setVisivel(lance.id);
+      if (lance) setVisivel({ semente, id: lance.id });
     },
-    [],
+    [semente],
   );
 
   // Cada lance conta uma visualização por vez que o feed é aberto.
@@ -91,6 +93,7 @@ export default function FeedLances() {
       <View style={styles.coluna} onLayout={(e) => setAlturaMedida(e.nativeEvent.layout.height)}>
         {altura > 0 ? (
           <FlatList
+            key={semente}
             data={lances}
             keyExtractor={(lance) => lance.id}
             renderItem={({ item }) => (
@@ -112,6 +115,9 @@ export default function FeedLances() {
               if (feed.hasNextPage && !feed.isFetchingNextPage) feed.fetchNextPage();
             }}
             onEndReachedThreshold={1}
+            // Puxar o primeiro lance para baixo sorteia outra ordem, como nos apps de vídeo.
+            refreshing={false}
+            onRefresh={() => setSemente(Date.now())}
             initialNumToRender={1}
             maxToRenderPerBatch={2}
             windowSize={3}

@@ -61,8 +61,8 @@ export default function ExcluirConta() {
           Excluir conta
         </Text>
         <Text style={styles.dica}>
-          Você pode excluir sua conta quando quiser. Para sair só deste aparelho, use “Sair da
-          conta” no perfil.
+          Você pode excluir sua conta quando quiser. Para sair só deste aparelho, use o botão
+          Sair da conta no perfil.
         </Text>
       </View>
 

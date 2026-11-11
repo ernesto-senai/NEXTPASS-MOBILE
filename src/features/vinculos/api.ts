@@ -33,7 +33,7 @@ export interface AceiteDeVinculo {
 const post = <T>(caminho: string, corpo: unknown) =>
   api<T>(caminho, { method: "POST", body: JSON.stringify(corpo) });
 
-// Rotas de vínculo com o responsável (Endpoints v2.0, seção 5.3).
+// Rotas de vínculo com o responsável.
 export const vinculosApi = {
   pedir: (emailResponsavel: string) =>
     post<{ id: string; emailResponsavel: string; status: string }>("/vinculos", {

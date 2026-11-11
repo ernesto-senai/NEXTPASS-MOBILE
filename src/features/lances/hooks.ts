@@ -3,11 +3,12 @@ import { useState } from "react";
 import { proximaPagina } from "@/lib/paginacao";
 import { lancesApi, type NovoLance } from "./api";
 
-// RF-32: feed de lances (só para olheiro verificado, RN-04).
-export function useFeedDeLances() {
+// RF-32: feed de lances (só para olheiro verificado, RN-04), em ordem aleatória. A
+// semente mantém a ordem entre as páginas; outra semente sorteia outra ordem.
+export function useFeedDeLances(semente: number) {
   return useInfiniteQuery({
-    queryKey: ["lances", "feed"],
-    queryFn: ({ pageParam }) => lancesApi.feed(pageParam),
+    queryKey: ["lances", "feed", semente],
+    queryFn: ({ pageParam }) => lancesApi.feed(pageParam, semente),
     initialPageParam: 1,
     getNextPageParam: proximaPagina,
   });

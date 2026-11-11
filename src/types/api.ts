@@ -1,4 +1,4 @@
-// Contratos da API NextPass (Endpoints v2.0, Quadro 2).
+// Contratos da API NextPass.
 // Mantenha em sincronia com os enums de prisma/schema.prisma do backend.
 
 export type TipoUsuario = "ATLETA" | "OLHEIRO" | "RESPONSAVEL" | "ADMIN";

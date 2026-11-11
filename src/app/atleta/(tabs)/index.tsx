@@ -42,7 +42,7 @@ export default function FeedAtleta() {
             accessibilityRole="header"
             numberOfLines={1}
           >
-            Bem-vindo, {primeiroNome(nome)} 👋
+            Bem-vindo, {primeiroNome(nome)}
           </Text>
           <Text style={styles.subtitulo}>Confira as próximas peneiras públicas</Text>
         </View>

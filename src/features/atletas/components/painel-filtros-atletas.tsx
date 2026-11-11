@@ -9,7 +9,7 @@ import { CATEGORIAS, PES_PREFERENCIAIS, POSICOES } from "@/lib/rotulos";
 import type { FiltrosAtleta } from "../api";
 
 const ORDENS = [
-  { valor: "nome", rotulo: "Nome (A–Z)" },
+  { valor: "nome", rotulo: "Nome (A-Z)" },
   { valor: "maisNovos", rotulo: "Mais novos" },
   { valor: "maisAltos", rotulo: "Mais altos" },
 ] as const;

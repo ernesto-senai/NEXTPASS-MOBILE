@@ -95,7 +95,7 @@ export default function PublicarLance() {
           <View style={styles.envio}>
             <BarraProgresso atual={porcentagem} total={100} rotuloAcessivel="Envio do lance" />
             <Text style={styles.textoEnvio} accessibilityLiveRegion="polite">
-              {porcentagem < 100 ? `Enviando… ${porcentagem}%` : "Finalizando…"}
+              {porcentagem < 100 ? `Enviando... ${porcentagem}%` : "Finalizando..."}
             </Text>
           </View>
         ) : null}

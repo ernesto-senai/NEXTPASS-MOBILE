@@ -1,9 +1,8 @@
 import { QueryClient } from "@tanstack/react-query";
 import { ApiError } from "@/services/api/client";
 
-// Cache do estado vindo da API (listas, perfis, avaliações). Erros 4xx (ex.:
-// olheiro não verificado, dado inválido) não mudam se repetir, então só falhas
-// de rede ou do servidor ganham uma nova tentativa.
+// Cache dos dados da API. Erro 4xx não muda se tentar de novo, então só erro de
+// rede ou do servidor tenta outra vez.
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

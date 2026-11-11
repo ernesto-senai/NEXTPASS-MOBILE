@@ -4,9 +4,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useLayoutResponsivo } from "@/hooks/use-layout-responsivo";
 import { cores, espacamento, larguraMaximaConteudo } from "@/theme";
 
-// Base das telas abertas por cima das abas (detalhes, perfis, formulários): o
-// cabeçalho com "voltar" fica em cima, o conteúdo rola na vertical, acompanha
-// o teclado e, em telas largas, fica numa coluna de até 640px.
+// Base das telas abertas por cima das abas: cabeçalho com voltar, conteúdo que
+// rola e, em telas largas, coluna de até 640px.
 export function TelaRolavel({ children }: { children: ReactNode }) {
   const { margemLateral, espacoEntreCampos } = useLayoutResponsivo();
 

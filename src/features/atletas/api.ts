@@ -43,7 +43,7 @@ export interface FiltrosAtleta {
   ordenar?: "nome" | "maisNovos" | "maisAltos";
 }
 
-// Rotas de atletas (Endpoints v2.0, seção 5.5).
+// Rotas de atletas.
 export const atletasApi = {
   buscar: (pagina: number, filtros: FiltrosAtleta = {}) =>
     api<Pagina<AtletaResumo>>(`/atletas?${montarQuery(filtros, pagina)}`),

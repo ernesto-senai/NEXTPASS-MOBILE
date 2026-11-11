@@ -8,9 +8,8 @@ interface TelaFormularioProps {
   children: ReactNode;
 }
 
-// Base das telas de login e cadastro: rola só na vertical, acompanha o teclado,
-// respeita a área segura e, em telas largas, centraliza o formulário num cartão.
-// No celular o cartão some e a borda vira área útil.
+// Base das telas de login e cadastro: rola na vertical, sobe com o teclado e,
+// em telas largas, mostra o formulário num cartão no meio.
 export function TelaFormulario({ children }: TelaFormularioProps) {
   const { largo, margemLateral } = useLayoutResponsivo();
 
