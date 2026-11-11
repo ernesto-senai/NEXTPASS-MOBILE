@@ -29,7 +29,7 @@ interface DadosCadastroOlheiroApi extends DadosCadastroApi {
 const post = <T>(caminho: string, corpo: unknown) =>
   api<T>(caminho, { method: "POST", body: JSON.stringify(corpo) });
 
-// Rotas de autenticação e cadastro (Endpoints v2.0, seções 5.1 e 5.2).
+// Rotas de autenticação e cadastro.
 export const authApi = {
   entrar: (dados: { email: string; senha: string; lembrar: boolean }) =>
     post<SessaoApi>("/auth/login", dados),
@@ -37,4 +37,7 @@ export const authApi = {
   cadastrarOlheiro: (dados: DadosCadastroOlheiroApi) => post<SessaoApi>("/olheiros", dados),
   termos: () => api<Termos>("/termos"),
   sair: (refreshToken: string) => post<void>("/auth/logout", { refreshToken }),
+  // RF-56: confirma a senha antes de apagar a conta de vez.
+  excluirConta: (senha: string) =>
+    api<void>("/perfil", { method: "DELETE", body: JSON.stringify({ senha }) }),
 };

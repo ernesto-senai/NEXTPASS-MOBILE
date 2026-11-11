@@ -33,7 +33,7 @@ export const PES_PREFERENCIAIS = [
   { valor: "AMBIDESTRO", rotulo: "Ambidestro" },
 ] as const satisfies readonly { valor: PePreferencial; rotulo: string }[];
 
-// Rótulo de uma opção pelo valor (ex.: "MEI" → "Meia").
+// Rótulo de uma opção pelo valor (ex.: "MEI" vira "Meia").
 export const rotuloDe = <T extends string>(
   opcoes: readonly { valor: T; rotulo: string }[],
   valor: T,

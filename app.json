@@ -37,7 +37,7 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "O NextPass acessa sua galeria para você escolher o vídeo do lance.",
+          "photosPermission": "O NextPass acessa sua galeria para você escolher a foto de perfil e os vídeos dos lances.",
           "cameraPermission": false,
           "microphonePermission": false
         }

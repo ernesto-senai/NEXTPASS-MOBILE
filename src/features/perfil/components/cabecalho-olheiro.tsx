@@ -1,12 +1,12 @@
 import { StyleSheet, Text, View } from "react-native";
-import { Avatar } from "@/components/ui/avatar";
 import { Etiqueta } from "@/components/ui/etiqueta";
 import { useLayoutResponsivo } from "@/hooks/use-layout-responsivo";
 import { cores, espacamento, fonte, raio } from "@/theme";
 import type { Perfil } from "../api";
+import { FotoPerfil } from "./foto-perfil";
 
 // Cartão do topo do perfil do olheiro (protótipo "Perfil Olheiro"): foto,
-// nome, atuação e a situação da verificação (RN-04).
+// nome, atuação e a situação da verificação (RN-04). A foto pode ser trocada (RF-14).
 export function CabecalhoOlheiro({ perfil }: { perfil: Perfil }) {
   const { compacto } = useLayoutResponsivo();
   const { olheiro } = perfil;
@@ -14,7 +14,7 @@ export function CabecalhoOlheiro({ perfil }: { perfil: Perfil }) {
 
   return (
     <View style={styles.cartao}>
-      <Avatar nome={perfil.nome} fotoUrl={perfil.fotoUrl} tamanho={compacto ? 72 : 88} />
+      <FotoPerfil nome={perfil.nome} fotoUrl={perfil.fotoUrl} />
       <Text
         style={[styles.nome, { fontSize: compacto ? fonte.tituloCompacto : fonte.titulo }]}
         accessibilityRole="header"

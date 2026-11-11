@@ -16,6 +16,10 @@ interface CarrosselLancesProps {
 // RF-28: lances em destaque, um por vez, com os pontos de posição do protótipo.
 export function CarrosselLances({ lances, largura }: CarrosselLancesProps) {
   const [atual, setAtual] = useState(0);
+  // Todos deitados: 16:9. Com algum em pé, 4:5, para ele aparecer inteiro.
+  const alturaVideo = lances.every((lance) => lance.horizontal)
+    ? Math.round((largura * 9) / 16)
+    : Math.min(Math.round(largura * 1.25), 460);
 
   return (
     <View style={styles.carrossel}>
@@ -25,7 +29,9 @@ export function CarrosselLances({ lances, largura }: CarrosselLancesProps) {
         showsHorizontalScrollIndicator={false}
         data={lances}
         keyExtractor={(lance) => lance.id}
-        renderItem={({ item }) => <SlideLance lance={item} largura={largura} />}
+        renderItem={({ item }) => (
+          <SlideLance lance={item} largura={largura} alturaVideo={alturaVideo} />
+        )}
         onScroll={(evento) => setAtual(Math.round(evento.nativeEvent.contentOffset.x / largura))}
         scrollEventThrottle={16}
         style={{ width: largura }}
@@ -41,17 +47,25 @@ export function CarrosselLances({ lances, largura }: CarrosselLancesProps) {
   );
 }
 
-function SlideLance({ lance, largura }: { lance: LanceDoAtleta; largura: number }) {
+interface SlideLanceProps {
+  lance: LanceDoAtleta;
+  largura: number;
+  alturaVideo: number;
+}
+
+function SlideLance({ lance, largura, alturaVideo }: SlideLanceProps) {
   const player = useVideoPlayer(urlDoArquivo(lance.url));
 
   return (
     <View style={[styles.slide, { width: largura }]}>
       <View>
+        {/* contain: mostra o vídeo inteiro. textureView: no Android, desenha todos os vídeos. */}
         <VideoView
           player={player}
           nativeControls
-          contentFit="cover"
-          style={styles.video}
+          contentFit="contain"
+          surfaceType="textureView"
+          style={[styles.video, { height: alturaVideo }]}
           accessibilityLabel={lance.legenda ?? "Lance em destaque"}
         />
         <View style={styles.duracao} pointerEvents="none">
@@ -79,8 +93,7 @@ const styles = StyleSheet.create({
   },
   video: {
     width: "100%",
-    aspectRatio: 16 / 9,
-    backgroundColor: cores.fundoCampo,
+    backgroundColor: cores.fundo,
   },
   duracao: {
     position: "absolute",

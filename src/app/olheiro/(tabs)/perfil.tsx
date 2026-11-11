@@ -2,7 +2,9 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Abas } from "@/components/ui/abas";
+import { Aviso } from "@/components/ui/aviso";
 import { Botao } from "@/components/ui/botao";
+import { LinkTexto } from "@/components/ui/link-texto";
 import { ListaPaginada } from "@/components/ui/lista-paginada";
 import { MensagemErro } from "@/components/ui/mensagem-erro";
 import { TelaLista } from "@/components/ui/tela-lista";
@@ -55,6 +57,15 @@ export default function PerfilOlheiro() {
                 params: { id: avaliacao.id },
               })
             }
+            onEditar={
+              aba === "proximas"
+                ? () =>
+                    router.push({
+                      pathname: "/olheiro/avaliacoes/[id]/editar",
+                      params: { id: avaliacao.id },
+                    })
+                : undefined
+            }
             onCancelar={aba === "proximas" ? () => pedirCancelamento(avaliacao) : undefined}
             cancelando={cancelar.isPending && cancelar.variables === avaliacao.id}
           />
@@ -62,6 +73,18 @@ export default function PerfilOlheiro() {
         cabecalho={
           <View style={[styles.cabecalho, { gap: espacoEntreCampos }]}>
             {perfil.data ? <CabecalhoOlheiro perfil={perfil.data} /> : null}
+            {/* RN-04: sem a verificação, as funções de olheiro ficam bloqueadas. */}
+            {perfil.data?.olheiro?.verificado === false ? (
+              <Aviso
+                icone="shield-checkmark-outline"
+                titulo="Verifique sua conta"
+                texto="Envie seus documentos para liberar o feed, a busca de atletas, as avaliações e os convites."
+                acao={{
+                  titulo: "Ver verificação",
+                  onPress: () => router.push("/olheiro/verificacao"),
+                }}
+              />
+            ) : null}
             <Botao
               titulo="Criar avaliação"
               iconeInicio="add"
@@ -75,6 +98,9 @@ export default function PerfilOlheiro() {
         rodape={
           <View style={styles.sair}>
             <BotaoSair />
+            <View style={styles.excluir}>
+              <LinkTexto onPress={() => router.push("/excluir-conta")}>Excluir conta</LinkTexto>
+            </View>
           </View>
         }
         vazio={
@@ -100,6 +126,10 @@ const styles = StyleSheet.create({
     marginBottom: espacamento.md,
   },
   sair: {
+    gap: espacamento.sm,
     marginTop: espacamento.lg,
+  },
+  excluir: {
+    alignItems: "center",
   },
 });

@@ -1,6 +1,7 @@
 import { montarQuery } from "@/lib/filtros";
 import { api } from "@/services/api/client";
 import type { Categoria, Pagina, PePreferencial, Posicao } from "@/types/api";
+import type { LanceDoAtleta } from "../lances/api";
 
 // Card do atleta na busca do olheiro (RF-37).
 export interface AtletaResumo {
@@ -16,6 +17,13 @@ export interface AtletaResumo {
   alturaCm: number;
   pesoKg: number;
   pePreferencial: PePreferencial;
+}
+
+// RF-38: perfil do atleta na visão do olheiro, com até 3 lances (os destaques
+// primeiro).
+export interface AtletaDetalhe extends AtletaResumo {
+  lances: LanceDoAtleta[];
+  totalLances: number;
 }
 
 // RF-35 e RF-36: busca pelo nome e filtros. Campo vazio não filtra.
@@ -35,8 +43,9 @@ export interface FiltrosAtleta {
   ordenar?: "nome" | "maisNovos" | "maisAltos";
 }
 
-// Rotas de atletas (Endpoints v2.0, seção 5.5).
+// Rotas de atletas.
 export const atletasApi = {
   buscar: (pagina: number, filtros: FiltrosAtleta = {}) =>
     api<Pagina<AtletaResumo>>(`/atletas?${montarQuery(filtros, pagina)}`),
+  detalhe: (id: string) => api<AtletaDetalhe>(`/atletas/${id}`),
 };

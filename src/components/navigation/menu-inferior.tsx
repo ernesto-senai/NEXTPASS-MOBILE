@@ -32,7 +32,7 @@ export function MenuInferior() {
           name={nome}
           options={{
             title: titulo,
-            tabBarIcon: ({ color, size }) => <Ionicons name={icone} color={color} size={size} />,
+            tabBarIcon: ({ color, size }) => <Ionicons name={icone} color={typeof color === "string" ? color : undefined} size={size} />,
           }}
         />
       ))}

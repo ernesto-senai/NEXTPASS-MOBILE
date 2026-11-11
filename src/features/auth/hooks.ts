@@ -6,10 +6,9 @@ import { useSessao } from "@/store/sessao";
 import { authApi, type SessaoApi } from "./api";
 import type { DadosCadastro, DadosLogin } from "./schemas";
 
-// Guarda a sessão no app. O Stack.Protected do layout raiz leva o usuário para
-// a área do perfil assim que a sessão existe. O cache é limpo para não mostrar
-// dados da conta anterior no mesmo aparelho.
-async function abrirSessao(resposta: SessaoApi, lembrar: boolean) {
+// Salva a sessão. O Stack.Protected leva para a área do perfil, e o cache é limpo
+// para não aparecer nada da conta anterior.
+export async function abrirSessao(resposta: SessaoApi, lembrar: boolean) {
   const { tipo } = resposta.usuario;
   if (tipo === "ADMIN") {
     throw new ApiError(403, "ACESSO_NEGADO", "Contas de administrador usam o painel da equipe.");
@@ -52,9 +51,7 @@ export function useCadastrar() {
   });
 }
 
-// RF-55: sai da conta. Avisa a API para invalidar o token do aparelho; se ela
-// não responder (ex.: sem internet), sai do app do mesmo jeito. Sem sessão, o
-// Stack.Protected do layout raiz leva de volta para o login.
+// RF-55: sair. Avisa a API para invalidar o token; se ela não responder, sai do mesmo jeito.
 export function useSair() {
   return useMutation({
     mutationFn: async () => {
@@ -62,6 +59,22 @@ export function useSair() {
       if (sessao) await authApi.sair(sessao.refreshToken).catch(() => undefined);
       await encerrar();
       queryClient.clear();
+    },
+  });
+}
+
+// Sai do aparelho sem avisar a API (a conta já não existe mais).
+async function limparSessao() {
+  await useSessao.getState().encerrar();
+  queryClient.clear();
+}
+
+// RF-56: exclui a conta e volta para o login.
+export function useExcluirConta() {
+  return useMutation({
+    mutationFn: async (senha: string) => {
+      await authApi.excluirConta(senha);
+      await limparSessao();
     },
   });
 }

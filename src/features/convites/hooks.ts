@@ -27,3 +27,8 @@ export function useResponderConvite() {
       ),
   });
 }
+
+// RF-39: convite enviado pelo olheiro (a caixa do atleta é de outra conta).
+export function useEnviarConvite() {
+  return useMutation({ mutationFn: convitesApi.enviar });
+}

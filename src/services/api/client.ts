@@ -1,16 +1,26 @@
+import Constants from "expo-constants";
+import { Platform } from "react-native";
 import { type Sessao, useSessao } from "@/store/sessao";
 import type { ErroApi } from "@/types/api";
 
-const BASE_URL = `${process.env.EXPO_PUBLIC_API_URL}/api/v1`;
+// No celular, localhost é o próprio aparelho. Por isso o app usa o endereço do Expo
+// (o mesmo de onde baixou o código), que repassa /api e /uploads para a API (metro.config.js).
+function enderecoDaApi() {
+  const url = process.env.EXPO_PUBLIC_API_URL ?? "";
+  const expo = Constants.expoConfig?.hostUri;
+  if (Platform.OS === "web" || !expo || !/\/\/(localhost|127\.0\.0\.1)\b/.test(url)) return url;
+  return `http://${expo}`;
+}
+
+const API_URL = enderecoDaApi();
+const BASE_URL = `${API_URL}/api/v1`;
 
 // Arquivos guardados pela própria API vêm com caminho relativo
 // (/uploads/videos/...); os de outros serviços já vêm com a URL completa.
-export const urlDoArquivo = (url: string) =>
-  url.startsWith("/") ? `${process.env.EXPO_PUBLIC_API_URL}${url}` : url;
+export const urlDoArquivo = (url: string) => (url.startsWith("/") ? `${API_URL}${url}` : url);
 
-// Erro da API com o código fixo que o app usa para tratar cada caso
-// (ex.: VAGAS_ESGOTADAS mostra "Vagas esgotadas" no botão). Em erros de
-// validação (400), `campos` traz a mensagem de cada campo.
+// Erro da API com o código fixo (ex.: VAGAS_ESGOTADAS). No erro 400, `campos` traz a
+// mensagem de cada campo.
 export class ApiError extends Error {
   constructor(
     readonly status: number,
@@ -35,10 +45,9 @@ export function mensagemDeErro(erro: unknown): string {
 
 let renovacaoEmAndamento: Promise<boolean> | null = null;
 
-// RF-03: o token de acesso dura 15 minutos. Quando ele expira, troca o token
-// de atualização por um par novo. Se a API recusar, a sessão acabou e o app
-// volta para o login; sem internet, mantém a sessão para tentar depois.
-// Pedidos simultâneos esperam a mesma renovação.
+// RF-03: o token dura 15 minutos. Quando expira, pede outro com o token de atualização.
+// Se a API recusar, volta ao login; sem internet, mantém a sessão.
+// Pedidos ao mesmo tempo esperam a mesma troca.
 function renovarSessao(): Promise<boolean> {
   renovacaoEmAndamento ??= (async () => {
     const { sessao, atualizar, encerrar } = useSessao.getState();
@@ -94,9 +103,8 @@ export async function api<T>(caminho: string, init: RequestInit = {}, renovar = 
   return corpo as T;
 }
 
-// RNF-05: envio de arquivo (multipart/form-data) com o progresso de 0 a 1. O
-// fetch não informa o progresso do envio; o XMLHttpRequest informa, no
-// celular e na web.
+// RNF-05: envio de arquivo com progresso (0 a 1). Usa XMLHttpRequest porque o fetch
+// não informa o progresso do envio.
 export async function enviarArquivo<T>(
   caminho: string,
   dados: FormData,

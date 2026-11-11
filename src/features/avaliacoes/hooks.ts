@@ -2,6 +2,7 @@ import {
   keepPreviousData,
   useInfiniteQuery,
   useMutation,
+  useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import { proximaPagina } from "@/lib/paginacao";
@@ -34,6 +35,47 @@ export function useCriarAvaliacao() {
   });
 }
 
+// RF-20: detalhes de uma avaliação.
+export function useAvaliacao(id: string) {
+  return useQuery({
+    queryKey: ["avaliacoes", "detalhe", id],
+    queryFn: () => avaliacoesApi.detalhe(id),
+  });
+}
+
+// RF-44: participantes de uma avaliação do olheiro, com busca pelo nome.
+export function useParticipantes(id: string, busca: string) {
+  return useInfiniteQuery({
+    queryKey: ["avaliacoes", "participantes", id, busca],
+    queryFn: ({ pageParam }) => avaliacoesApi.participantes(id, busca, pageParam),
+    initialPageParam: 1,
+    getNextPageParam: proximaPagina,
+    placeholderData: keepPreviousData,
+  });
+}
+
+// Inscrever, cancelar, remover ou aprovar mudam vagas e listas: tudo de
+// avaliações e inscrições é recarregado.
+function useAlterarAvaliacoes<T, R>(mutationFn: (dados: T) => Promise<R>) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn,
+    onSuccess: () =>
+      Promise.all(
+        ["avaliacoes", "inscricoes", "convites"].map((chave) =>
+          queryClient.invalidateQueries({ queryKey: [chave] }),
+        ),
+      ),
+  });
+}
+
+// RF-21: "Quero participar da avaliação".
+export const useParticipar = () => useAlterarAvaliacoes(avaliacoesApi.participar);
+// RF-22, RF-46 e RF-50: mudança de status da inscrição.
+export const useAlterarInscricao = () => useAlterarAvaliacoes(avaliacoesApi.alterarInscricao);
+// RF-43: edição da avaliação pelo olheiro.
+export const useEditarAvaliacao = () => useAlterarAvaliacoes(avaliacoesApi.editar);
+
 // RF-42: avaliações do olheiro, com os participantes de cada uma.
 export function useMinhasAvaliacoes(situacao: SituacaoAvaliacao) {
   return useInfiniteQuery({
@@ -51,6 +93,16 @@ export function useCancelarAvaliacao() {
   return useMutation({
     mutationFn: avaliacoesApi.cancelar,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["avaliacoes"] }),
+  });
+}
+
+// RF-50: inscrições dos atletas vinculados esperando o responsável.
+export function useInscricoesParaAprovar() {
+  return useInfiniteQuery({
+    queryKey: ["inscricoes", "aprovar"],
+    queryFn: ({ pageParam }) => avaliacoesApi.paraAprovar(pageParam),
+    initialPageParam: 1,
+    getNextPageParam: proximaPagina,
   });
 }
 

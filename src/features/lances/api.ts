@@ -10,6 +10,8 @@ export interface LanceDoFeed {
   legenda: string | null;
   localizacao: string | null;
   duracaoSeg: number;
+  // Vídeo deitado: aparece inteiro, sem cortar.
+  horizontal: boolean;
   criadoEm: string;
   visualizacoes: number;
   atleta: { id: string; nome: string; fotoUrl: string | null };
@@ -22,6 +24,7 @@ export interface Lance {
   legenda: string | null;
   localizacao: string | null;
   duracaoSeg: number;
+  horizontal: boolean;
   destaque: boolean;
   criadoEm: string;
 }
@@ -41,10 +44,12 @@ export interface NovoLance {
   localizacao: string;
 }
 
-// Rotas de lances (Endpoints v2.0, seção 5.4).
+// Rotas de lances.
 export const lancesApi = {
-  feed: (pagina: number) =>
-    api<Pagina<LanceDoFeed>>(`/videos?pagina=${pagina}&limite=${TAMANHO_PAGINA}`),
+  feed: (pagina: number, semente: number) =>
+    api<Pagina<LanceDoFeed>>(
+      `/videos?pagina=${pagina}&limite=${TAMANHO_PAGINA}&semente=${semente}`,
+    ),
   registrarVisualizacao: (id: string) =>
     api<void>(`/videos/${id}/visualizacoes`, { method: "POST" }),
   // O perfil mostra até 50 lances (o limite de uma página da API).

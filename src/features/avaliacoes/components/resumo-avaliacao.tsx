@@ -48,7 +48,7 @@ export function ResumoAvaliacao({
           {formatarData(avaliacao.dataHora)} · {formatarHora(avaliacao.dataHora)}
         </Linha>
         <Linha icone="location-outline">
-          {avaliacao.local} – {avaliacao.cidade}, {avaliacao.uf}
+          {avaliacao.local} ({avaliacao.cidade}, {avaliacao.uf})
         </Linha>
         {mostrarOlheiro ? (
           <Linha icone="person-outline">Olheiro: {avaliacao.olheiro.nome}</Linha>

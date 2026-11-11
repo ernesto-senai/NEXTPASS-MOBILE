@@ -11,8 +11,9 @@ interface BarraBuscaProps {
   onAlterarTexto: (texto: string) => void;
   // Ex.: "12 avaliações encontradas"; vazio enquanto carrega.
   resumo: string;
-  filtrosAtivos: number;
-  onFiltrar: () => void;
+  // Sem onFiltrar (ex.: participantes), a barra mostra só a busca.
+  filtrosAtivos?: number;
+  onFiltrar?: (() => void) | undefined;
 }
 
 // Topo das telas de Pesquisa: campo de busca, total encontrado e "Filtrar".
@@ -22,7 +23,7 @@ export function BarraBusca({
   texto,
   onAlterarTexto,
   resumo,
-  filtrosAtivos,
+  filtrosAtivos = 0,
   onFiltrar,
 }: BarraBuscaProps) {
   const { margemLateral } = useLayoutResponsivo();
@@ -43,13 +44,15 @@ export function BarraBusca({
         <Text style={styles.total} accessibilityLiveRegion="polite">
           {resumo}
         </Text>
-        <Botao
-          titulo={filtrosAtivos ? `Filtrar (${filtrosAtivos})` : "Filtrar"}
-          variante="contorno"
-          tamanho="compacto"
-          iconeInicio="options-outline"
-          onPress={onFiltrar}
-        />
+        {onFiltrar ? (
+          <Botao
+            titulo={filtrosAtivos ? `Filtrar (${filtrosAtivos})` : "Filtrar"}
+            variante="contorno"
+            tamanho="compacto"
+            iconeInicio="options-outline"
+            onPress={onFiltrar}
+          />
+        ) : null}
       </View>
     </View>
   );

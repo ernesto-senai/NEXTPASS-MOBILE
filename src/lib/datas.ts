@@ -1,6 +1,6 @@
 // Leitura das datas digitadas com máscara nos formulários.
 
-// "29/11/2026" → data no fuso do aparelho; null se o dia não existir (31/02).
+// Converte "29/11/2026" em data, no fuso do aparelho. Null se o dia não existir (31/02).
 export function lerData(texto: string) {
   const [, dia, mes, ano] = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(texto)?.map(Number) ?? [];
   if (!dia || !mes || !ano) return null;
@@ -8,7 +8,7 @@ export function lerData(texto: string) {
   return data.getMonth() === mes - 1 && data.getDate() === dia ? data : null;
 }
 
-// "15:00" → { horas: 15, minutos: 0 }; null fora de 00:00 a 23:59.
+// Converte "15:00" em { horas: 15, minutos: 0 }. Null fora de 00:00 a 23:59.
 export function lerHora(texto: string) {
   const [, horas, minutos] = /^(\d{2}):(\d{2})$/.exec(texto)?.map(Number) ?? [];
   if (horas === undefined || minutos === undefined || horas > 23 || minutos > 59) return null;
@@ -23,7 +23,7 @@ export const paraDataIso = (data: Date) =>
     String(data.getDate()).padStart(2, "0"),
   ].join("-");
 
-// "2009-05-10" (ou o mesmo dia com horário em UTC) → "10/05/2009" para o campo.
+// Converte "2009-05-10" (ou com horário em UTC) em "10/05/2009" para o campo.
 export const deDataIso = (iso: string) => iso.slice(0, 10).split("-").reverse().join("/");
 
 // Idade completa em anos numa data (RN-01).

@@ -1,5 +1,6 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import { iniciais } from "@/lib/formatadores";
+import { urlDoArquivo } from "@/services/api/client";
 import { cores } from "@/theme";
 
 interface AvatarProps {
@@ -14,7 +15,11 @@ export function Avatar({ nome, fotoUrl, tamanho = 44 }: AvatarProps) {
 
   if (fotoUrl) {
     return (
-      <Image source={{ uri: fotoUrl }} style={[styles.base, forma]} accessibilityLabel={nome} />
+      <Image
+        source={{ uri: urlDoArquivo(fotoUrl) }}
+        style={[styles.base, forma]}
+        accessibilityLabel={nome}
+      />
     );
   }
 

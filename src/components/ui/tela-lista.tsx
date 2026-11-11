@@ -7,16 +7,25 @@ interface TelaListaProps {
   children: ReactNode;
   // Telas sem o menu inferior (ex.: modais) também respeitam a borda de baixo.
   comBordaInferior?: boolean;
+  // Abaixo do cabeçalho com "voltar", a borda de cima já é do cabeçalho.
+  abaixoDoCabecalho?: boolean;
 }
 
 // Base das telas de lista (feeds e pesquisas): fundo escuro, área segura e, em
 // tablets e no navegador, uma coluna centralizada de até 640px.
-export function TelaLista({ children, comBordaInferior = false }: TelaListaProps) {
+export function TelaLista({
+  children,
+  comBordaInferior = false,
+  abaixoDoCabecalho = false,
+}: TelaListaProps) {
+  const bordas = abaixoDoCabecalho
+    ? (["left", "right", "bottom"] as const)
+    : comBordaInferior
+      ? (["top", "left", "right", "bottom"] as const)
+      : (["top", "left", "right"] as const);
+
   return (
-    <SafeAreaView
-      style={styles.tela}
-      edges={comBordaInferior ? ["top", "left", "right", "bottom"] : ["top", "left", "right"]}
-    >
+    <SafeAreaView style={styles.tela} edges={bordas}>
       <View style={styles.coluna}>{children}</View>
     </SafeAreaView>
   );
