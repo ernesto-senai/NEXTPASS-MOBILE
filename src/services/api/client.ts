@@ -5,10 +5,12 @@ import type { ErroApi } from "@/types/api";
 
 // No celular, localhost é o próprio aparelho. Por isso o app usa o endereço do Expo
 // (o mesmo de onde baixou o código), que repassa /api e /uploads para a API (metro.config.js).
+// Sem .env é igual: o Expo repassa para http://localhost:3333.
 function enderecoDaApi() {
   const url = process.env.EXPO_PUBLIC_API_URL ?? "";
   const expo = Constants.expoConfig?.hostUri;
-  if (Platform.OS === "web" || !expo || !/\/\/(localhost|127\.0\.0\.1)\b/.test(url)) return url;
+  const apiLocal = !url || /\/\/(localhost|127\.0\.0\.1)\b/.test(url);
+  if (Platform.OS === "web" || !expo || !apiLocal) return url;
   return `http://${expo}`;
 }
 

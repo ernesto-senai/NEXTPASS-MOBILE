@@ -18,6 +18,32 @@ export const loginSchema = z.object({
 
 export type DadosLogin = z.infer<typeof loginSchema>;
 
+// RF-05: e-mail para receber o código, depois o código com a nova senha.
+export const pedidoDeSenhaSchema = z.object({ email });
+
+export type DadosPedidoDeSenha = z.infer<typeof pedidoDeSenhaSchema>;
+
+export const novaSenhaSchema = z
+  .object({
+    codigo: z.string().trim().regex(/^\d{6}$/, "Digite os 6 números do código."),
+    novaSenha: z.string().min(8, "A senha precisa ter pelo menos 8 caracteres."),
+    confirmacaoSenha: z.string(),
+  })
+  .superRefine(
+    (dados, ctx) => {
+      if (dados.confirmacaoSenha !== dados.novaSenha) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["confirmacaoSenha"],
+          message: "As senhas não conferem.",
+        });
+      }
+    },
+    { when: () => true },
+  );
+
+export type DadosNovaSenha = z.infer<typeof novaSenhaSchema>;
+
 export const cadastroSchema = z
   .object({
     perfil: z.enum(["ATLETA", "OLHEIRO"]),

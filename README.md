@@ -20,7 +20,7 @@ A API precisa estar rodando (veja `../NEXTPASS-BACKEND`). O `.env` fica com `loc
 
 **Com a API publicada:** troque o `EXPO_PUBLIC_API_URL` do `.env` pelo endereço dela no Render (veja o README da API). O app passa a falar direto com ela, e todos os computadores e celulares veem os mesmos lances, perfis e avaliações. No Expo Go, o código do app ainda vem do computador pelo `npm run celular`.
 
-O `.env` e a pasta `.expo/` não vão para o GitHub: cada um tem o seu. Os tipos das rotas (`.expo/types`) são gerados na primeira vez que o Expo sobe.
+O `.env` e a pasta `.expo/` não vão para o GitHub: cada um tem o seu. Sem `.env`, o app usa a API deste computador (`http://localhost:3333`), como no `.env.example`. Os tipos das rotas (`.expo/types`) são gerados na primeira vez que o Expo sobe.
 
 | Script                      | O que faz                                                     |
 | --------------------------- | ------------------------------------------------------------- |
@@ -70,7 +70,7 @@ src/
 
 **Perfis:** o `Stack.Protected` do layout raiz libera a área de cada perfil (`atleta/`, `olheiro/`, `responsavel/`), e cada área tem o próprio `(tabs)`. O menu inferior é o mesmo para atleta e olheiro (Feed, Pesquisa, Publicar, Notificações, Perfil), mas cada perfil tem telas diferentes em cada aba.
 
-**Deep links:** o scheme `nextpass://` abre `confirmar-vinculo`, o link enviado ao responsável (RF-48). O "Esqueceu sua senha?" é simulado: a tela confere o e-mail e mostra a confirmação do envio (RF-05).
+**Deep links:** o scheme `nextpass://` abre `confirmar-vinculo`, o link enviado ao responsável (RF-48). O "Esqueceu sua senha?" manda um código de 6 números para o e-mail, e a tela seguinte usa o código para criar a nova senha (RF-05).
 
 ### Responsividade e toque (mobile-first)
 
@@ -84,7 +84,7 @@ As regras ficam em `src/theme` e `src/hooks/use-layout-responsivo.ts`, e os comp
 - **Fontes:** inputs e placeholders usam 16px, o que evita o zoom automático do Safari no iOS (versão web).
 - **Formulários:** usam `react-hook-form` + `zod`, com todos os erros mostrados de uma vez no envio (RNF-15). Os erros da API, como e-mail já cadastrado, aparecem no próprio campo.
 
-### Fora do escopo do TCC (trabalhos futuros)
+### Decisões de escopo
 
-- **Login com Google (RF-04, RF-12)** e **notificações push (RF-53):** exigiriam `expo-auth-session`, `expo-notifications` e um development build (o Expo Go não recebe push). Os avisos ficam na aba Notificações.
-- **Compressão de vídeo no Android (RNF-04):** no iOS a galeria já entrega o vídeo em 720p; no Android o app confere o limite de 50 MB antes do envio. Comprimir exigiria uma biblioteca nativa e um development build.
+- **Login com Google (RF-04, RF-12) e notificações push (RF-53):** a equipe tirou do escopo durante o projeto, porque dependem de um build próprio do app (o Expo Go não recebe push). Os avisos aparecem na aba Notificações.
+- **Vídeos (RNF-04):** no iOS a galeria já entrega o vídeo em 720p; no Android o app confere o limite de 50 MB antes do envio.

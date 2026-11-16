@@ -51,6 +51,15 @@ export function useCadastrar() {
   });
 }
 
+// RF-05: código de nova senha por e-mail e troca da senha.
+export function usePedirNovaSenha() {
+  return useMutation({ mutationFn: (email: string) => authApi.pedirNovaSenha(email) });
+}
+
+export function useRedefinirSenha() {
+  return useMutation({ mutationFn: authApi.redefinirSenha });
+}
+
 // RF-55: sair. Avisa a API para invalidar o token; se ela não responder, sai do mesmo jeito.
 export function useSair() {
   return useMutation({
